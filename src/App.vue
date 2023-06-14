@@ -3,7 +3,7 @@
     <nav>
       <searchBar></searchBar>
     </nav>
-    <div class="content">
+    <article>
       <aside>
         <router-link to="/discover">发现音乐</router-link>
         <router-link to="/myinfo">myInfo</router-link>
@@ -11,7 +11,7 @@
       <section>
         <router-view></router-view>
       </section>
-    </div>
+    </article>
     <footer>footer</footer>
   </div>
 </template>
@@ -32,6 +32,11 @@ export default {
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+ul,
+li {
+  list-style: none;
 }
 html,
 body {
@@ -56,12 +61,12 @@ footer {
   width: 100%;
   height: 10%;
 }
-.content {
+article {
   display: flex;
   width: 100%;
   height: 80%;
   aside {
-    width: 30%;
+    width: 15%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -70,8 +75,10 @@ footer {
   }
   section {
     padding: 10px 20px;
-    width: 80%;
+    width: 85%;
     height: 100%;
+    text-align: left;
+    overflow: auto;
   }
 }
 </style>

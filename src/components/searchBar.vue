@@ -1,25 +1,26 @@
 <template>
   <div class="searchBar">
-    <div class="icon"></div>
+    <div class="toHome">
+      <div class="el-icon-s-home" @click="goHome"></div>
+    </div>
     <div class="search">
       <div class="move">
         <div class="el-icon-arrow-left arrow" @click="historyGo(-1)"></div>
         <div class="el-icon-arrow-right arrow" @click="historyGo(1)"></div>
       </div>
-      <el-autocomplete popper-class="my-autocomplete" v-model="searchValue" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect" @input="inputChange" :popper-append-to-body='false'>
+      <el-autocomplete popper-class="my-autocomplete" v-model="searchValue" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect" @input="inputChange" :popper-append-to-body='false' ref="searchInput">
+        <i slot="suffix" class="el-input__icon el-icon-search" @click="search"></i>
         <!-- 输入建议模板 -->
         <template slot-scope="{ item }">
           <div class="name">{{ item.value }}</div>
         </template>
       </el-autocomplete>
     </div>
-
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
-import { getSeachKeyword, search, suggestSearch } from '../request/request'
+import { getSeachKeyword, suggestSearch } from '../request/request'
 export default {
   data() {
     return {
@@ -36,7 +37,6 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['updateSeachList']),
     // 获取热搜列表
     getPopSeach() {
       getSeachKeyword().then(res => {
@@ -65,22 +65,19 @@ export default {
     },
     // 选中处理方法
     handleSelect(item) {
-      this.searchValue = ''
-      search(item.value).then(res => {
-        // 把搜索列表和搜索关键词传输到vuex中 供searchList页面使用
-        this.updateSeachList({
-          searchKey: item.value,
-          data: res.data.result.songs
-        })
-        // 跳转到searchList
-        this.$router.push({ path: '/searchlist' })
-        // 重新调一次获取热搜列表
-        this.getPopSeach()
-      })
+      // 跳转到searchList
+      this.$router.push({ path: '/searchlist', query: { keyword: item.value } })
+      this.searchValue = item.value
+      // 重新调一次获取热搜列表
+      this.getPopSeach()
     },
     // 处理前进后退按钮的方法
     historyGo(num) {
       this.$router.go(num)
+    },
+    // 处理点击主页的方法
+    goHome() {
+      this.$router.push('/')
     },
     // 处理input事件的方法
     inputChange() {
@@ -88,15 +85,22 @@ export default {
         if (res.data.code === 200) {
           let data = res.data.result.songs
           data = data.map(item => {
-            let name = item.name.toLowerCase().includes(this.searchValue.toLowerCase()) ? item.name + '-' + item.artists[0].name : item.album.name.toLowerCase().includes(this.searchValue.toLowerCase()) ? item.album.name + '-' + item.artists[0].name : item.name + '-' + item.artists[0].name
+            let showName = item.name.toLowerCase().includes(this.searchValue.toLowerCase()) ? item.name + '-' + item.artists[0].name : item.album.name.toLowerCase().includes(this.searchValue.toLowerCase()) ? item.album.name + '-' + item.artists[0].name : item.name + '-' + item.artists[0].name
             return {
-              value: name
+              value: showName
             }
           })
-          // this.searchList.title = 'title'
           this.searchList = data
         }
       })
+    },
+    // 点击搜索按钮
+    search() {
+      if (this.searchValue === '') return
+
+      // 跳转到searchList
+      this.$router.push({ path: '/searchlist', query: { keyword: this.searchValue } })
+      this.$refs.searchInput.close()
     }
   },
   mounted() {
@@ -108,8 +112,21 @@ export default {
 <style lang='less' scoped>
 .searchBar {
   height: 100%;
+  display: flex;
+}
+.toHome {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  height: 100%;
+  /deep/ div {
+    cursor: pointer;
+    font-size: 30px;
+  }
 }
 .search {
+  flex: 1;
   .move {
     display: flex;
     align-items: center;
@@ -155,5 +172,8 @@ export default {
       overflow: hidden;
     }
   }
+}
+/deep/ .el-input__icon.el-icon-search {
+  cursor: pointer;
 }
 </style>
