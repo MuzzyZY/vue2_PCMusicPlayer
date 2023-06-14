@@ -8,26 +8,35 @@ const service = axios.create(
   }
 )
 
-// 添加请求拦截器
-service.interceptors.request.use(function (config) {
-  // 在发送请求之前做些什么
-  return config
-}, function (error) {
-  // 对请求错误做些什么
-  console.log(error)
-  return Promise.reject(error)
-})
+axios.defaults.retry = 4
 
-// 添加响应拦截器
-service.interceptors.response.use(function (response) {
-  // 2xx 范围内的状态码都会触发该函数。
-  // 对响应数据做点什么
-  return response
-}, function (error) {
-  console.log(error)
-  // 超出 2xx 范围的状态码都会触发该函数。
-  // 对响应错误做点什么
-  return Promise.reject(error)
+axios.defaults.retryDelay = 1000
+
+axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
+  let config = err.config
+  // If config does not exist or the retry option is not set, reject
+  if (!config || !config.retry) return Promise.reject(err)
+  // Set the variable for keeping track of the retry count
+  config.__retryCount = config.__retryCount || 0
+  // Check if we've maxed out the total number of retries
+  if (config.__retryCount >= config.retry) {
+    // Reject with the error
+    return Promise.reject(err)
+  }
+  // Increase the retry count
+  config.__retryCount += 1
+  // Create new promise to handle exponential backoff
+  let backoff = new Promise(function(resolve) {
+    setTimeout(function() {
+      resolve()
+    }, config.retryDelay || 1)
+  })
+
+  // Return the promise in which recalls axios to retry the request
+
+  return backoff.then(function() {
+    return axios(config)
+  })
 })
 
 export default service

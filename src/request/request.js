@@ -9,6 +9,9 @@ export function search(keyword = '', limit = 30, offset = 0) {
 export function suggestSearch(keyword = '', limit = 10) {
   return service(`/search?keywords=${keyword}&limit=${limit}`)
 }
-export function playSong(id) {
-  return service(`/song/url/v1?id=${id}&level=exhigh`)
+export function playSong(id, quality = 'standard') {
+  return service(`/song/url/v1?id=${id}&level=${quality}`)
+}
+export function songsInfo(id) {
+  return service(`/song/detail?ids=${id}`)
 }

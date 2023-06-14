@@ -11,8 +11,9 @@
           <div class="album">专辑</div>
           <div class="songsTime">时长</div>
         </li>
-        <li v-for="(item,index) in list.songs" :key='item.index' @dblclick="playMusic(item.id)" @mousedown.right="seeDetail(item.id,$event)">
-          <div class="index overFlow">{{((index+1<10)?(currentPage===1)?'0':'':'') + ((index+1)+(currentPage-1)*30)}}</div>
+        <li v-for="(item,index) in list.songs" :key='item.index' @dblclick="playMusic(item.id)">
+          <div class=" index overFlow">{{((index+1<10)?(currentPage===1)?'0':'':'') + ((index+1)+(currentPage-1)*30)}}
+          </div>
           <div class="name overFlow">{{item.name}}</div>
           <div class="artist overFlow">
             <span v-for="singer in item.artists" :key='singer.index'>
@@ -34,6 +35,7 @@
 
 <script>
 import { search } from '@/request/request'
+import { mapMutations } from 'vuex'
 export default {
   data() {
     return {
@@ -57,6 +59,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['setMusicId']),
     searchData() {
       this.searchKey = this.$router.currentRoute.query.keyword
       search(this.$router.currentRoute.query.keyword).then(res => {
@@ -65,7 +68,7 @@ export default {
       })
     },
     playMusic(id) {
-      console.log(id)
+      this.setMusicId(id)
     },
     updatePage(page) {
       let temp = this.$refs.dotList.findIndex(item => {

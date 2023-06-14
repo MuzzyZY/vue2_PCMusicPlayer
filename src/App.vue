@@ -12,18 +12,22 @@
         <router-view></router-view>
       </section>
     </article>
-    <footer>footer</footer>
+    <footer>
+      <musicPlayer></musicPlayer>
+    </footer>
   </div>
 </template>
 
 <script>
+import musicPlayer from './components/musicPlayer.vue'
 import searchBar from './components/searchBar.vue'
 export default {
   data() {
     return {}
   },
   components: {
-    searchBar
+    searchBar,
+    musicPlayer
   }
 }
 </script>
@@ -59,12 +63,12 @@ nav {
 }
 footer {
   width: 100%;
-  height: 10%;
+  height: 15%;
 }
 article {
   display: flex;
   width: 100%;
-  height: 80%;
+  height: 75%;
   aside {
     width: 15%;
     height: 100%;
