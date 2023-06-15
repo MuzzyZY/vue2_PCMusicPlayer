@@ -66,8 +66,8 @@ export default {
     searchData() {
       this.searchKey = this.$router.currentRoute.query.keyword
       search(this.$router.currentRoute.query.keyword).then(res => {
-        this.list = res.data.result
-        this.searchTotal = Math.ceil(res.data.result.songCount / 30)
+        this.list = res.result
+        this.searchTotal = Math.ceil(res.result.songCount / 30)
       })
     },
     playMusic(id) {

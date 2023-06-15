@@ -131,10 +131,9 @@ export default {
     musicId(value) {
       this.music = value
       songsInfo(this.music).then(res => {
-        this.info = res.data.songs[0]
+        this.info = res.songs[0]
       })
       playSong(this.music, this.quality).then(res => {
-        console.log(res.data.data[0])
         if (this.audio) {
           this.audio.pause()
           this.audio = null
@@ -143,7 +142,7 @@ export default {
         if (this.timer) {
           clearInterval(this.timer)
         }
-        this.musicUrl = res.data.data[0].url || `https://music.163.com/song/media/outer/url?id=${this.music}.mp3`
+        this.musicUrl = res.data[0].url || `https://music.163.com/song/media/outer/url?id=${this.music}.mp3`
         this.isPlay = true
 
         this.audio = new Audio()

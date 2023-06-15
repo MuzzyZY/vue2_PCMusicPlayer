@@ -82,8 +82,8 @@ export default {
     // 处理input事件的方法
     inputChange() {
       suggestSearch(this.searchValue).then(res => {
-        if (res.data.code === 200) {
-          let data = res.data.result.songs
+        if (res.code === 200) {
+          let data = res.result.songs
           data = data.map(item => {
             let showName = item.name.toLowerCase().includes(this.searchValue.toLowerCase()) ? item.name + '-' + item.artists[0].name : item.album.name.toLowerCase().includes(this.searchValue.toLowerCase()) ? item.album.name + '-' + item.artists[0].name : item.name + '-' + item.artists[0].name
             return {

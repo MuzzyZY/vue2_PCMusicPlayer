@@ -5,8 +5,8 @@ export function getSeachKeyword() {
   return service('/search/hot')
 }
 // 搜索
-export function search(keyword = '', limit = 30, offset = 0) {
-  return service(`/cloudsearch?keywords=${keyword}&limit=${limit}&offset=${offset}`)
+export function search(keyword = '', limit = 30, offset = 0, type = 1) {
+  return service(`/cloudsearch?keywords=${keyword}&limit=${limit}&offset=${offset}&type=${type}`)
 }
 // 建议搜索
 export function suggestSearch(keyword = '', limit = 10) {
@@ -20,6 +20,23 @@ export function playSong(id, quality = 'standard') {
 export function songsInfo(id) {
   return service(`/song/detail?ids=${id}`)
 }
+// 获取banner图
 export function getBanner() {
   return service('/banner?type=0')
+}
+// 获取推荐歌单
+export function getRecommandList(limit = 9) {
+  return service(`/personalized?limit=${limit}`)
+}
+// 获取每日推荐歌单
+export function getDaylyRecommand() {
+  return service('/recommend/resource')
+}
+// 获取推荐节目
+export function getRecommandProgram() {
+  return service('/program/recommend')
+}
+// 获取独家放送
+export function personalizedProgram() {
+  return service('/personalized/privatecontent')
 }
