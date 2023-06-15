@@ -11,7 +11,7 @@
           <div class="album">专辑</div>
           <div class="songsTime">时长</div>
         </li>
-        <li v-for="(item,index) in list.songs" :key='item.index' @dblclick="playMusic(item.id)">
+        <li v-for="(item,index) in list.songs" :key='item.index' @dblclick="playMusic(item.id)" @click="toDetail($event)">
           <div class=" index overFlow">{{((index+1<10)?(currentPage===1)?'0':'':'') + ((index+1)+(currentPage-1)*30)}}
           </div>
           <div class="name overFlow">
@@ -29,9 +29,8 @@
       </ul>
     </div>
     <div class="bottom">
-      <div class="dot" v-for="i in searchTotal" :key='i.index' @click="updatePage(i)" ref="dotList">
-        {{i}}
-      </div>
+      <el-pagination background layout="prev, pager, next" :total="Number(searchTotal)" :current-page="currentPage" @current-change='pageChange'>
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -67,24 +66,24 @@ export default {
       this.searchKey = this.$router.currentRoute.query.keyword
       search(this.$router.currentRoute.query.keyword).then(res => {
         this.list = res.result
-        this.searchTotal = Math.ceil(res.result.songCount / 30)
+        this.searchTotal = this.list.songCount
       })
     },
     playMusic(id) {
       this.setMusicId(id)
     },
-    updatePage(page) {
-      let temp = this.$refs.dotList.findIndex(item => {
-        return item.classList.contains('active')
-      })
-      this.$refs.dotList[temp].classList.remove('active')
-      this.currentPage = page
-      document.querySelector('section').scrollTo(0, 0, {
-        behavior: 'smooth'
-      })
-      search(this.searchKey, 30, this.currentPage - 1).then(res => {
-        this.list = res.data.result
-        this.searchTotal = Math.ceil(res.data.result.songCount / 30)
+    toDetail(e) {
+      if (e.target.parentNode.classList.contains('artist') || e.target.classList.contains('artist')) {
+        this.$router.push({
+          path: '/detail',
+          query: { keyword: this.searchKey, type: 100 }
+        })
+      }
+    },
+    pageChange(val) {
+      this.currentPage = val
+      search(this.searchKey, 30, val - 1).then(res => {
+        this.list = res.result
       })
     }
   },
@@ -92,11 +91,6 @@ export default {
     this.searchData()
     document.querySelector('section').oncontextmenu = function (e) {
       e.preventDefault()
-    }
-  },
-  updated() {
-    if (this.$refs.dotList) {
-      this.$refs.dotList[this.currentPage - 1].classList.add('active')
     }
   }
 }

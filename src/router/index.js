@@ -45,6 +45,11 @@ const routes = [
     path: '/searchlist',
     name: 'searchList',
     component: () => import(/* webpackChunkName: "about" */ '../pages/showSearchList.vue')
+  },
+  {
+    path: '/detail',
+    name: 'detail',
+    component: () => import(/* webpackChunkName: "about" */ '../pages/detailSearch.vue')
   }
 
 ]
