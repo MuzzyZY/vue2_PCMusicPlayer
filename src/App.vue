@@ -42,6 +42,11 @@ ul,
 li {
   list-style: none;
 }
+a {
+  text-decoration: none;
+  color: #2c3e50;
+  font-size: 18px;
+}
 html,
 body {
   width: 100%;
@@ -76,6 +81,7 @@ article {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border-right: 1px solid rgb(224, 224, 224);
   }
   section {
     padding: 10px 20px;

@@ -32,14 +32,14 @@
     </div>
     <div class="right">
       <div class="choseQuality">
-        <el-dropdown trigger="click">
+        <el-dropdown trigger="click" @command="commandHandler">
           <span class="el-dropdown-link" style='color:rgb(236, 65, 65);'>
-            品质<i class="el-icon-arrow-down el-icon--right"></i>
+            {{quality=='standard'?'标准':(quality=='higher'?'较高':'极高')}}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>标准(默认)</el-dropdown-item>
-            <el-dropdown-item>较高音质</el-dropdown-item>
-            <el-dropdown-item>极高音质</el-dropdown-item>
+            <el-dropdown-item command='standard'>标准(默认)</el-dropdown-item>
+            <el-dropdown-item command='higher'>较高音质</el-dropdown-item>
+            <el-dropdown-item command='exhigh'>极高音质</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -73,6 +73,9 @@ export default {
   methods: {
     changePicCover(boolean) {
       this.picCover = boolean
+    },
+    commandHandler(key) {
+      this.quality = key
     },
     formatTooltip(val) {
       let m = parseInt(val / 60)

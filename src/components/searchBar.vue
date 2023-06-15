@@ -40,8 +40,8 @@ export default {
     // 获取热搜列表
     getPopSeach() {
       getSeachKeyword().then(res => {
-        if (res.data.code === 200) {
-          let data = res.data.result.hots
+        if (res.code === 200) {
+          let data = res.result.hots
           data = data.map(item => {
             return {
               value: item.first

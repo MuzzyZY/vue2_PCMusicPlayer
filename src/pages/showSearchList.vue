@@ -14,14 +14,17 @@
         <li v-for="(item,index) in list.songs" :key='item.index' @dblclick="playMusic(item.id)">
           <div class=" index overFlow">{{((index+1<10)?(currentPage===1)?'0':'':'') + ((index+1)+(currentPage-1)*30)}}
           </div>
-          <div class="name overFlow">{{item.name}}</div>
+          <div class="name overFlow">
+            {{item.name}}
+            <span v-if="item.fee!=0?item.fee!=8:false">vip</span>
+          </div>
           <div class="artist overFlow">
-            <span v-for="singer in item.artists" :key='singer.index'>
-              {{item.artists.length!==1?singer.name+'/':singer.name}}
+            <span v-for="singer in item.ar" :key='singer.index'>
+              {{item.ar.length!==1?singer.name+'/':singer.name}}
             </span>
           </div>
-          <div class="album overFlow">{{item.album.name}}</div>
-          <div class="songsTime overFlow">{{(item.duration/1000/60).toFixed(2)}}</div>
+          <div class="album overFlow">{{item.al.name}}</div>
+          <div class="songsTime overFlow">{{(item.dt/1000/60).toFixed(2)}}</div>
         </li>
       </ul>
     </div>
@@ -164,6 +167,12 @@ header {
       .name {
         width: 50%;
         height: 100%;
+        span {
+          padding: 0 2px;
+          font-size: 12px;
+          color: rgb(254, 145, 103);
+          border: 1px solid rgb(254, 145, 103);
+        }
       }
       .artist {
         height: 100%;

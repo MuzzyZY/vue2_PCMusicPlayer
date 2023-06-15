@@ -7,11 +7,33 @@ const routes = [
   {
     path: '/',
     name: 'discover',
-    component: () => import(/* webpackChunkName: "about" */ '../views/discoverView.vue')
+    redirect: '/discover'
   },
   {
     path: '/discover',
     name: 'discover',
+    children: [
+      {
+        path: '/',
+        component: () => import(/* webpackChunkName: "about" */ '../pages/recommendPage.vue')
+      },
+      {
+        path: '/songlist',
+        component: () => import(/* webpackChunkName: "about" */ '../pages/songList.vue')
+      },
+      {
+        path: '/totallist',
+        component: () => import(/* webpackChunkName: "about" */ '../pages/totalList.vue')
+      },
+      {
+        path: '/artists',
+        component: () => import(/* webpackChunkName: "about" */ '../pages/artistsList.vue')
+      },
+      {
+        path: '/newsongs',
+        component: () => import(/* webpackChunkName: "about" */ '../pages/newSongs.vue')
+      }
+    ],
     component: () => import(/* webpackChunkName: "about" */ '../views/discoverView.vue')
   },
   {
