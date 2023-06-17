@@ -40,3 +40,11 @@ export function getRecommandProgram() {
 export function personalizedProgram() {
   return service('/personalized/privatecontent')
 }
+
+// 获取歌单信息
+export function getListDetail(id) {
+  return service(`/playlist/detail?id=${id}`)
+}
+export function getListSongs(id, limit = 30, offset = 0) {
+  return service(`/playlist/track/all?id=${id}&limit=${limit}&offset=${offset}`)
+}

@@ -104,7 +104,10 @@ export default {
       }
     },
     toListDetail(id) {
-      console.log(id)
+      this.$router.push({
+        path: '/listdetail',
+        query: { id }
+      })
     },
     toProgramDetail(id) {
       console.log(id)

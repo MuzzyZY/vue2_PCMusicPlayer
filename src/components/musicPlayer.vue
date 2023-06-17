@@ -123,7 +123,6 @@ export default {
     },
     changeSlide(newVal) {
       this.slideValue = newVal
-      console.log(this.slideValue)
       this.audio.currentTime = newVal
     }
   },
@@ -169,7 +168,7 @@ export default {
   margin-left: 20px;
   .songPic {
     position: relative;
-    width: 27%;
+    width: 30%;
     height: 90%;
     border-radius: 4px;
     overflow: hidden;

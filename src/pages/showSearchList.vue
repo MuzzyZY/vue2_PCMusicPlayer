@@ -29,7 +29,7 @@
       </ul>
     </div>
     <div class="bottom">
-      <el-pagination background layout="prev, pager, next" :total="Number(searchTotal)" :current-page="currentPage" @current-change='pageChange'>
+      <el-pagination background layout="prev, pager, next" :total="Number(searchTotal)" :current-page="currentPage" @current-change='pageChange' :page-size="30">
       </el-pagination>
     </div>
   </div>

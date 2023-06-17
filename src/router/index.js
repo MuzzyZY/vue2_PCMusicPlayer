@@ -19,19 +19,19 @@ const routes = [
       },
       {
         path: '/songlist',
-        component: () => import(/* webpackChunkName: "about" */ '../pages/songList.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../components/songList.vue')
       },
       {
         path: '/totallist',
-        component: () => import(/* webpackChunkName: "about" */ '../pages/totalList.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../components/totalList.vue')
       },
       {
         path: '/artists',
-        component: () => import(/* webpackChunkName: "about" */ '../pages/artistsList.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../components/artistsList.vue')
       },
       {
         path: '/newsongs',
-        component: () => import(/* webpackChunkName: "about" */ '../pages/newSongs.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../components/newSongs.vue')
       }
     ],
     component: () => import(/* webpackChunkName: "about" */ '../views/discoverView.vue')
@@ -50,8 +50,12 @@ const routes = [
     path: '/detail',
     name: 'detail',
     component: () => import(/* webpackChunkName: "about" */ '../pages/detailSearch.vue')
+  },
+  {
+    path: '/listdetail',
+    name: 'listDetail',
+    component: () => import(/* webpackChunkName: "about" */ '../pages/listDetail.vue')
   }
-
 ]
 const originalPush = VueRouter.prototype.push
 const originalReplace = VueRouter.prototype.replace
