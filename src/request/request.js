@@ -45,6 +45,12 @@ export function personalizedProgram() {
 export function getListDetail(id) {
   return service(`/playlist/detail?id=${id}`)
 }
+// 获取歌单内的歌曲
 export function getListSongs(id, limit = 30, offset = 0) {
   return service(`/playlist/track/all?id=${id}&limit=${limit}&offset=${offset}`)
+}
+
+// 获取歌词
+export function getLyric(id) {
+  return service(`/lyric?id=${id}`)
 }

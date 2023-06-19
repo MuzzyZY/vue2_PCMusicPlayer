@@ -6,6 +6,14 @@
   <title>Document</title>
 </head>
 <body>
-  <audio src="http://m7.music.126.net/20230615173332/8418f83974c4216ef1224ce524d6fa0f/ymusic/obj/w5zDlMODwrDDiGjCn8Ky/28688081385/a4af/0f85/b94d/e08c301a04e7ba84a19c3046a162aa61.mp3" autoplay></audio>
+  <script>
+    let arr = ['[20:00.04]','[20:00.03]','[22:00.06]','[20:24.07]','[23:24.038]','[25:24.018]','[21:30.03]']
+    let reg = /\[\d{2}:\d{2}\.\d{2,3}\]/g
+    arr.map(item=>{
+      let temp = item.replace(reg,'')
+      console.log(temp);
+      return true
+    })
+  </script>
 </body>
 </html>

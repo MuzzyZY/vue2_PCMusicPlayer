@@ -84,8 +84,6 @@ header {
           height: 100%;
         }
       }
-      .name {
-      }
     }
   }
 }

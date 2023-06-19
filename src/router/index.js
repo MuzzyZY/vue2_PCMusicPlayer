@@ -55,6 +55,11 @@ const routes = [
     path: '/listdetail',
     name: 'listDetail',
     component: () => import(/* webpackChunkName: "about" */ '../pages/listDetail.vue')
+  },
+  {
+    path: '/seelyric',
+    name: 'seelyric',
+    component: () => import(/* webpackChunkName: "about" */ '../components/showLyric.vue')
   }
 ]
 const originalPush = VueRouter.prototype.push

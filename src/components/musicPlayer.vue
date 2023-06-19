@@ -1,7 +1,7 @@
 <template>
   <div class="player">
     <div class="left">
-      <div class="songPic" @mouseenter="changePicCover(true)" @mouseleave="changePicCover(false)">
+      <div class="songPic" @mouseenter="changePicCover(true)" @mouseleave="changePicCover(false)" @click="toLyric">
         <img :src="(info?info.al.picUrl:'https://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg')" alt="">
         <div class="cover" v-show="picCover">
           <div class="el-icon-arrow-up" style="font-size:30px; color:#fff;"></div>
@@ -77,6 +77,16 @@ export default {
     commandHandler(key) {
       this.quality = key
     },
+    toLyric() {
+      if (this.music) {
+        this.$router.push({
+          path: '/seelyric',
+          query: {
+            id: this.music
+          }
+        })
+      }
+    },
     formatTooltip(val) {
       let m = parseInt(val / 60)
       m = m < 10 ? '0' + m : m
@@ -88,11 +98,34 @@ export default {
       if (!this.audio) return false
       this.isPlay = false
       this.audio.pause()
+      clearInterval(this.timer)
     },
     pause() {
       if (!this.audio) return false
       this.isPlay = true
-      this.audio.play()
+      let playPromise = this.audio.play()
+      if (playPromise) {
+        playPromise
+          .then(() => {
+            let second
+            // 音频加载成功
+            // 音频的播放需要耗时
+            this.timer = setInterval(() => {
+              second = this.songsDuration - this.slideValue
+              second--
+              this.slideValue = this.songsDuration - second
+              this.slideValue = Number(this.slideValue.toFixed(2))
+              if (second <= 0) {
+                this.audio.pause()
+                clearInterval(this.timer)
+              }
+            }, 1000)
+          })
+          .catch(e => {
+            // 音频加载失败
+            console.error(e)
+          })
+      }
     },
     playAudio() {
       let that = this
