@@ -176,7 +176,6 @@ export default {
         }
         this.musicUrl = res.data[0].url || `https://music.163.com/song/media/outer/url?id=${this.music}.mp3`
         this.isPlay = true
-
         this.audio = new Audio()
         this.audio.src = this.musicUrl
         this.playAudio()

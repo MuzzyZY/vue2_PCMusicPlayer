@@ -58,7 +58,6 @@ export default {
       let songsInfo = lyric.splice(0, 2)
       this.lyricInfo = res.lyricUser
       this.lyricTransInfo = res.transUser
-      console.log(this.lyricInfo, this.lyricTransInfo)
       if (transLyric.length === 0) {
         this.lyric = [...songsInfo, ...lyric, this.lyricInfo ? '歌词上传人:' + this.lyricInfo.nickname : '', this.lyricTransInfo ? '翻译上传人:' + this.lyricTransInfo.nickname : '']
       } else {
