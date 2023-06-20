@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <script>
-    let arr = ['[20:00.04]','[20:00.03]','[22:00.06]','[20:24.07]','[23:24.038]','[25:24.018]','[21:30.03]']
-    let reg = /\[\d{2}:\d{2}\.\d{2,3}\]/g
-    arr.map(item=>{
-      let temp = item.replace(reg,'')
-      console.log(temp);
-      return true
-    })
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const str = 'fsafjkla12:00dsadf00:01safas:12:03 0:60 0:00 dalsj 23:00'
+      const regex = /(\d{1,2}:\d{2})/g
+      const matches = str.match(regex)
+      console.log(matches)
+    </script>
+  </body>
 </html>

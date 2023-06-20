@@ -18,8 +18,10 @@
     </div>
     <div class="lyric">
       <ul>
-        <li v-for="(lyric,index) in lyric" :key="index">
-          {{lyric}}
+        <li v-for="(item,index) in lyric" :key="index">
+          <div v-for='(lyric,index) in item.lyric' :key="index">
+            {{lyric}}
+          </div>
         </li>
       </ul>
     </div>
@@ -35,7 +37,16 @@ export default {
       info: null,
       lyricInfo: null,
       lyricTransInfo: null,
-      lyric: null
+      lyric: []
+    }
+  },
+  computed: {},
+  methods: {
+    formatToMs(timeStr) {
+      let [minutes, timeString] = timeStr.split(':').map(str => str)
+      minutes = Number(minutes)
+      let [seconds, milliseconds] = timeString.split('.').map(str => parseInt(str))
+      return (minutes * 60 + seconds) * 1000 + milliseconds
     }
   },
   created() {
@@ -44,31 +55,47 @@ export default {
       this.info = res.songs[0]
     })
     getLyric(this.musicId).then(res => {
-      let lyric = res.lrc.lyric.split('\n')
-      let transLyric = res.tlyric.lyric.split('\n')
-      transLyric.splice(0, 1)
-      transLyric = transLyric.map(item => {
-        let temp = item.replace(/\[\d{2}:\d{2}\.\d{2,3}\]/g, '')
-        return temp
+      let lyric = res.lrc.lyric
+      lyric = lyric.split('\n')
+      let productor = lyric.splice(0, 2)
+      let transLyric
+      let lyricTime = []
+      if (res.tlyric.lyric) {
+        transLyric = res.tlyric.lyric
+        transLyric = transLyric.split('\n')
+        transLyric.splice(0, 1)
+        transLyric = transLyric.map(item => {
+          item = item.replace(/\[(\d{1,2}:)?([0-5]\d:)?([0-5]\d|\d{1,2})\.(\d{2,3})\]/, '')
+          return item
+        })
+      }
+      lyric = lyric.filter(item => {
+        if (item.match(/(\d{1,2}:)?([0-5]\d:)?([0-5]\d|\d{1,2})\.(\d{2,3})/)) {
+          lyricTime.push(item.match(/(\d{1,2}:)?([0-5]\d:)?([0-5]\d|\d{1,2})\.(\d{2,3})/)[0])
+        }
+        return item
       })
       lyric = lyric.map(item => {
-        let temp = item.replace(/\[\d{2}:\d{2}\.\d{2,3}\]/g, '')
-        return temp
+        item = item.replace(/\[(\d{1,2}:)?([0-5]\d:)?([0-5]\d|\d{1,2})\.(\d{2,3})\]/, '')
+        return item
       })
-      let songsInfo = lyric.splice(0, 2)
-      this.lyricInfo = res.lyricUser
-      this.lyricTransInfo = res.transUser
-      if (transLyric.length === 0) {
-        this.lyric = [...songsInfo, ...lyric, this.lyricInfo ? '歌词上传人:' + this.lyricInfo.nickname : '', this.lyricTransInfo ? '翻译上传人:' + this.lyricTransInfo.nickname : '']
-      } else {
-        let temp = []
-        for (let i = 0; i < lyric.length; i++) {
-          temp.push(lyric[i], transLyric[i])
-        }
-        temp = [...songsInfo, ...temp, this.lyricInfo ? '歌词上传人:' + this.lyricInfo.nickname : '', this.lyricTransInfo ? '翻译上传人:' + this.lyricTransInfo.nickname : '']
-        temp = temp.filter(item => item !== '')
-        this.lyric = temp
+      for (let i = 0; i < lyric.length; i++) {
+        lyricTime.push()
+        this.lyric.push({
+          lyric: [lyric[i], transLyric[i]],
+          nowTime: this.formatToMs(lyricTime[i]),
+          nextTime: lyricTime[i + 1] ? this.formatToMs(lyricTime[i + 1]) : 0
+        })
       }
+      productor = productor.map(item => {
+        return item.replace(/\[(\d{1,2}:)?([0-5]\d:)?([0-5]\d|\d{1,2})\.(\d{2,3})\]/, '')
+      })
+      this.lyric.unshift({
+        lyric: productor,
+        next: this.formatToMs(lyricTime[0]),
+        nowTime: 0
+      })
+      console.log(this.lyric)
     })
   }
 }
@@ -121,10 +148,12 @@ export default {
     overflow: auto;
     li {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       width: 100%;
-      height: 40px;
+      height: 70px;
+      font-size: 14px;
     }
   }
 }
