@@ -64,8 +64,9 @@ export default {
       this.info = res.songs[0]
     })
     getLyric(this.musicId).then(res => {
-      this.lyricInfo = res.lyricUser.nickname
-      this.lyricTransInfo = res.tlyric.nickname
+      console.log(res)
+      this.lyricInfo = res.lyricUser
+      this.lyricTransInfo = res.tlyric
       let lyric = res.lrc.lyric
       lyric = lyric.split('\n')
       let productor = lyric.splice(0, 2)
@@ -116,8 +117,8 @@ export default {
         next: this.formatToMs(lyricTime[0]),
         nowTime: 0
       })
-      this.lyricInfo = this.lyricInfo ? '歌词上传者：' + this.lyricInfo : '暂无歌词上传'
-      this.lyricTransInfo = this.lyricTransInfo ? '翻译上传者：' + this.lyricTransInfo : ''
+      this.lyricInfo = this.lyricInfo ? '歌词上传者：' + this.lyricInfo.nickname : ''
+      this.lyricTransInfo = this.lyricTransInfo ? '翻译上传者：' + this.lyricTransInfo.nickname : ''
       this.lyric.push({
         lyric: [this.lyricInfo, this.lyricTransInfo],
         next: 0,
