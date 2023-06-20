@@ -49,7 +49,7 @@
 
 <script>
 import { playSong, songsInfo } from '@/request/request'
-import { mapState } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 export default {
   data() {
     return {
@@ -71,11 +71,16 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['updateSlideVal']),
     changePicCover(boolean) {
       this.picCover = boolean
     },
     commandHandler(key) {
       this.quality = key
+      this.$message({
+        type: 'success',
+        message: '下一首歌曲生效'
+      })
     },
     toLyric() {
       if (this.music) {
@@ -160,6 +165,9 @@ export default {
     }
   },
   watch: {
+    slideValue(val) {
+      this.updateSlideVal(val)
+    },
     musicId(value) {
       this.music = value
       songsInfo(this.music).then(res => {

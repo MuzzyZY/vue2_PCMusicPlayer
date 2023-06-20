@@ -17,8 +17,8 @@
       </div>
     </div>
     <div class="lyric">
-      <ul>
-        <li v-for="(item,index) in lyric" :key="index">
+      <ul ref="lyricList">
+        <li v-for="(item,index) in lyric" :key="index" :class="{active:currentTime*1000>item.nowTime&&currentTime*1000<item.nextTime}">
           <div v-for='(lyric,index) in item.lyric' :key="index">
             {{lyric}}
           </div>
@@ -30,6 +30,7 @@
 
 <script>
 import { getLyric, songsInfo } from '@/request/request'
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
@@ -37,10 +38,18 @@ export default {
       info: null,
       lyricInfo: null,
       lyricTransInfo: null,
-      lyric: []
+      lyric: [],
+      currentTime: 0
     }
   },
-  computed: {},
+  computed: {
+    ...mapState(['slideValue'])
+  },
+  watch: {
+    slideValue(val) {
+      this.currentTime = val
+    }
+  },
   methods: {
     formatToMs(timeStr) {
       let [minutes, timeString] = timeStr.split(':').map(str => str)
@@ -55,6 +64,8 @@ export default {
       this.info = res.songs[0]
     })
     getLyric(this.musicId).then(res => {
+      this.lyricInfo = res.lyricUser.nickname
+      this.lyricTransInfo = res.tlyric.nickname
       let lyric = res.lrc.lyric
       lyric = lyric.split('\n')
       let productor = lyric.splice(0, 2)
@@ -79,20 +90,37 @@ export default {
         item = item.replace(/\[(\d{1,2}:)?([0-5]\d:)?([0-5]\d|\d{1,2})\.(\d{2,3})\]/, '')
         return item
       })
-      for (let i = 0; i < lyric.length; i++) {
-        lyricTime.push()
-        this.lyric.push({
-          lyric: [lyric[i], transLyric[i]],
-          nowTime: this.formatToMs(lyricTime[i]),
-          nextTime: lyricTime[i + 1] ? this.formatToMs(lyricTime[i + 1]) : 0
-        })
+      if (transLyric) {
+        for (let i = 0; i < lyric.length; i++) {
+          this.lyric.push({
+            lyric: [lyric[i], transLyric[i]],
+            nowTime: this.formatToMs(lyricTime[i]),
+            nextTime: lyricTime[i + 1] ? this.formatToMs(lyricTime[i + 1]) : 0
+          })
+        }
+      } else {
+        for (let i = 0; i < lyric.length; i++) {
+          this.lyric.push({
+            lyric: [lyric[i]],
+            nowTime: this.formatToMs(lyricTime[i]),
+            nextTime: lyricTime[i + 1] ? this.formatToMs(lyricTime[i + 1]) : 0
+          })
+        }
       }
+
       productor = productor.map(item => {
         return item.replace(/\[(\d{1,2}:)?([0-5]\d:)?([0-5]\d|\d{1,2})\.(\d{2,3})\]/, '')
       })
       this.lyric.unshift({
         lyric: productor,
         next: this.formatToMs(lyricTime[0]),
+        nowTime: 0
+      })
+      this.lyricInfo = this.lyricInfo ? '歌词上传者：' + this.lyricInfo : '暂无歌词上传'
+      this.lyricTransInfo = this.lyricTransInfo ? '翻译上传者：' + this.lyricTransInfo : ''
+      this.lyric.push({
+        lyric: [this.lyricInfo, this.lyricTransInfo],
+        next: 0,
         nowTime: 0
       })
       console.log(this.lyric)
@@ -154,6 +182,9 @@ export default {
       width: 100%;
       height: 70px;
       font-size: 14px;
+    }
+    .active {
+      font-size: 20px;
     }
   }
 }

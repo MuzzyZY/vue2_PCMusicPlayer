@@ -5,13 +5,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    musicId: ''
+    musicId: '',
+    slideValue: 0
   },
   getters: {
   },
   mutations: {
     setMusicId(state, value) {
       state.musicId = value
+    },
+    updateSlideVal(state, value) {
+      state.slideValue = value
     }
   },
   actions: {
