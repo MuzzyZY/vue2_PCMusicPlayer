@@ -16,16 +16,57 @@
         </template>
       </el-autocomplete>
     </div>
+    <div class="loginIn" v-if="!isLogin" @click="loginIn">
+      <div class="userInfo">
+        <el-avatar icon="el-icon-user-solid"></el-avatar>
+      </div>
+      <div class="name">
+        <div>请登录</div>
+      </div>
+    </div>
+    <div class="isLoginIn" v-else>
+      <div class="userInfo">
+        <el-avatar icon="el-icon-user-solid"></el-avatar>
+      </div>
+      <div class="name">
+        <div>请登录</div>
+      </div>
+    </div>
+    <div class="popOver">
+      <el-dialog title="请扫描二维码登录" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+        <div class="box">
+          <img :src="loginQr" alt="">
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <div class="tips">
+            <span>{{tips}}</span>
+          </div>
+          <div class="btns">
+            <el-button @click="cancel">取 消</el-button>
+            <el-button type="primary" :disabled='!checking' @click="checkOut">{{checkingCount===0?'点击刷新状态':checkingCount+'s后刷新检查登录状态'}}</el-button>
+          </div>
+        </span>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
-import { getSeachKeyword, suggestSearch } from '../request/request'
+import { getSeachKeyword, suggestSearch, getQrKey, getQr, CheckQrStatus } from '../request/request'
 export default {
   data() {
     return {
       searchList: [],
-      searchValue: ''
+      searchValue: '',
+      // 登录使用
+      isLogin: false,
+      loginQr: null,
+      dialogVisible: false,
+      checking: false,
+      checkingCount: 30,
+      qrKey: null,
+      timer: null,
+      tips: null
     }
   },
   watch: {
@@ -101,6 +142,59 @@ export default {
       // 跳转到searchList
       this.$router.push({ path: '/searchlist', query: { keyword: this.searchValue } })
       this.$refs.searchInput.close()
+    },
+    // 登入方法
+    loginIn() {
+      getQrKey().then(res => {
+        if (res.data.code === 200) {
+          let key = res.data.data.unikey
+          this.qrKey = key
+          getQr(key).then(res => {
+            this.loginQr = res.data.qrimg
+            this.dialogVisible = true
+            console.log(this.qrKey === key ? this.qrKey : '')
+            this.checkOut()
+          })
+        }
+      })
+    },
+    // 处理点击关闭
+    handleClose(done) {
+      this.$confirm('确认取消登录？')
+        .then(_ => {
+          done()
+          clearInterval(this.timer)
+        })
+        .catch(_ => {})
+    },
+    cancel() {
+      this.dialogVisible = false
+      clearInterval(this.timer)
+    },
+    // 检查状态
+    checkOut() {
+      this.checking = false
+      this.checkingCount = 30
+      this.timer = setInterval(() => {
+        CheckQrStatus(this.qrKey).then(res => {
+          console.log(res)
+          if (res.code === 803) {
+            sessionStorage.setItem('cookie', res.cookie)
+            this.tips = res.message
+            this.dialogVisible = false
+            if (this.timer) {
+              clearInterval(this.timer)
+            }
+            return
+          }
+          this.tips = res.message
+          this.checkingCount--
+          if (this.checkingCount === 0) {
+            this.checking = true
+            clearInterval(this.timer)
+          }
+        })
+      }, 1000)
     }
   },
   mounted() {
@@ -160,6 +254,15 @@ export default {
     }
   }
 }
+.loginIn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  height: 100%;
+  cursor: pointer;
+}
 /deep/ .el-autocomplete-suggestion {
   width: 260px !important;
   font-size: 14px;
@@ -175,5 +278,38 @@ export default {
 }
 /deep/ .el-input__icon.el-icon-search {
   cursor: pointer;
+}
+/deep/ .el-dialog__body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 260px;
+}
+.popOver {
+  .box {
+    width: 200px;
+    height: 200px;
+  }
+}
+.tips {
+  height: 40px;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+img {
+  width: 100%;
+  height: 100%;
+}
+.dialog-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.el-dialog__footer {
+  padding: 10px 20px;
 }
 </style>

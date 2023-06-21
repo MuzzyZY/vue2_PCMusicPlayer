@@ -2,12 +2,11 @@ import axios from 'axios'
 import router from '../router/index'
 const baseUrl = 'http://localhost:3000'
 
-const service = axios.create(
-  {
-    baseURL: baseUrl,
-    timeout: 5000
-  }
-)
+const service = axios.create({
+  baseURL: baseUrl,
+  timeout: 5000,
+  withCredentials: true
+})
 
 // 设置请求次数，请求的间隙
 service.defaults.retry = 4
@@ -78,4 +77,5 @@ service.interceptors.response.use(
     }
   }
 )
+
 export default service

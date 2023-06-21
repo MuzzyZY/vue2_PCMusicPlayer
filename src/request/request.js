@@ -1,3 +1,4 @@
+import axios from 'axios'
 import service from './basic'
 
 // 热门搜索关键词
@@ -53,4 +54,23 @@ export function getListSongs(id, limit = 30, offset = 0) {
 // 获取歌词
 export function getLyric(id) {
   return service(`/lyric?id=${id}`)
+}
+
+// 获取登录二维码key
+export function getQrKey() {
+  return axios({
+    method: 'POST',
+    url: 'http://localhost:3000/login/qr/key',
+    params: {
+      timestamp: Date.now()
+    }
+  })
+}
+// 二维码生成接口
+export function getQr(key) {
+  return service(`/login/qr/create?key=${key}&qrimg=true`)
+}
+// 二维码检测扫码状态接口
+export function CheckQrStatus(key) {
+  return service(`/login/qr/check?key=${key}`)
 }
