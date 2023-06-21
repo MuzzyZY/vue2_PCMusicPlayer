@@ -26,10 +26,10 @@
     </div>
     <div class="isLoginIn" v-else>
       <div class="userInfo">
-        <el-avatar icon="el-icon-user-solid"></el-avatar>
+        <el-avatar :src='userInfo.profile.avatarUrl'></el-avatar>
       </div>
       <div class="name">
-        <div>请登录</div>
+        <div>{{userInfo.profile.nickname}}</div>
       </div>
     </div>
     <div class="popOver">
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { getSeachKeyword, suggestSearch, getQrKey, getQr, CheckQrStatus } from '../request/request'
+import { getSeachKeyword, suggestSearch, getQrKey, getQr, CheckQrStatus, getUserInfo } from '../request/request'
 export default {
   data() {
     return {
@@ -66,7 +66,8 @@ export default {
       checkingCount: 30,
       qrKey: null,
       timer: null,
-      tips: null
+      tips: null,
+      userInfo: null
     }
   },
   watch: {
@@ -152,7 +153,6 @@ export default {
           getQr(key).then(res => {
             this.loginQr = res.data.qrimg
             this.dialogVisible = true
-            console.log(this.qrKey === key ? this.qrKey : '')
             this.checkOut()
           })
         }
@@ -177,11 +177,12 @@ export default {
       this.checkingCount = 30
       this.timer = setInterval(() => {
         CheckQrStatus(this.qrKey).then(res => {
-          console.log(res)
           if (res.data.code === 803) {
-            sessionStorage.setItem('cookie', res.data.cookie)
+            localStorage.setItem('cookie', res.data.cookie)
             this.tips = res.message
             this.dialogVisible = false
+            this.isLogin = true
+            this.getUserInfo()
             if (this.timer) {
               clearInterval(this.timer)
             }
@@ -195,6 +196,16 @@ export default {
           }
         })
       }, 1000)
+    },
+    getUserInfo() {
+      getUserInfo(localStorage.cookie).then(res => {
+        if (res.code === 200) {
+          this.userInfo = {
+            account: res.account,
+            profile: res.profile
+          }
+        }
+      })
     }
   },
   mounted() {
@@ -254,7 +265,8 @@ export default {
     }
   }
 }
-.loginIn {
+.loginIn,
+.isLogin {
   display: flex;
   flex-direction: column;
   justify-content: center;

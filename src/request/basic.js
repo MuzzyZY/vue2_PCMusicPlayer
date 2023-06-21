@@ -2,10 +2,11 @@ import axios from 'axios'
 import router from '../router/index'
 const baseUrl = 'http://localhost:3000'
 
+// axios.defaults.withCredentials = true
+
 const service = axios.create({
   baseURL: baseUrl,
-  timeout: 5000,
-  withCredentials: true
+  timeout: 5000
 })
 
 // 设置请求次数，请求的间隙

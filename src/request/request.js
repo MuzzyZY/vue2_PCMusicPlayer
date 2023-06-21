@@ -80,3 +80,12 @@ export function CheckQrStatus(key) {
     }
   })
 }
+// 获取用户信息
+export function getUserInfo(cookie) {
+  return service(`/user/account?cookie=${cookie}`)
+}
+
+// 获取歌单
+export function getPopSongsList(limit = 30, before = 0) {
+  return service(`/top/playlist/highquality?before=${before}&limit=${limit}`)
+}
