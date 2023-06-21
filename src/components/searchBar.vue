@@ -178,8 +178,8 @@ export default {
       this.timer = setInterval(() => {
         CheckQrStatus(this.qrKey).then(res => {
           console.log(res)
-          if (res.code === 803) {
-            sessionStorage.setItem('cookie', res.cookie)
+          if (res.data.code === 803) {
+            sessionStorage.setItem('cookie', res.data.cookie)
             this.tips = res.message
             this.dialogVisible = false
             if (this.timer) {

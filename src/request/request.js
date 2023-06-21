@@ -72,5 +72,11 @@ export function getQr(key) {
 }
 // 二维码检测扫码状态接口
 export function CheckQrStatus(key) {
-  return service(`/login/qr/check?key=${key}`)
+  return axios({
+    method: 'POST',
+    url: `http://localhost:3000/login/qr/check?key=${key}`,
+    params: {
+      timestamp: Date.now()
+    }
+  })
 }
