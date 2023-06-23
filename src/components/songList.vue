@@ -24,14 +24,7 @@ import { getPopSongsList } from '@/request/request'
 export default {
   data() {
     return {
-      songList: [],
-      loading: false,
-      timer: null
-    }
-  },
-  computed: {
-    disabled() {
-      return this.loading
+      songList: []
     }
   },
   methods: {
@@ -40,16 +33,10 @@ export default {
         path: '/listdetail',
         query: { id }
       })
-    },
-    load() {
-      this.$nextTick(() => {
-        this.loading = true
-        console.log(this)
-      })
     }
   },
   created() {
-    getPopSongsList(30).then(res => {
+    getPopSongsList(60).then(res => {
       if (res.code === 200) {
         this.songList = res.playlists
       }
