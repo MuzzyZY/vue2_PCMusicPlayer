@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="lyric">
-      <ul ref="lyricList">
+      <ul ref='lyricList'>
         <li v-for="(item,index) in lyric" :key="index" :class="{active:currentTime*1000>item.nowTime&&currentTime*1000<item.nextTime}">
           <div v-for='(lyric,index) in item.lyric' :key="index">
             {{lyric}}
@@ -48,10 +48,17 @@ export default {
   watch: {
     slideValue(val) {
       this.currentTime = val
+      let active = document.querySelector('.lyric .active')
+      if (active) {
+        if (active.offsetTop > 385) {
+          this.$refs.lyricList.scrollTop = active.offsetTop - 300
+        }
+      }
     }
   },
   methods: {
     formatToMs(timeStr) {
+      console.log(timeStr)
       let [minutes, timeString] = timeStr.split(':').map(str => str)
       minutes = Number(minutes)
       let [seconds, milliseconds] = timeString.split('.').map(str => parseInt(str))
@@ -64,9 +71,8 @@ export default {
       this.info = res.songs[0]
     })
     getLyric(this.musicId).then(res => {
-      console.log(res)
       this.lyricInfo = res.lyricUser
-      this.lyricTransInfo = res.tlyric
+      this.lyricTransInfo = res.transUser
       let lyric = res.lrc.lyric
       lyric = lyric.split('\n')
       let productor = lyric.splice(0, 2)
@@ -93,11 +99,13 @@ export default {
       })
       if (transLyric) {
         for (let i = 0; i < lyric.length; i++) {
-          this.lyric.push({
-            lyric: [lyric[i], transLyric[i]],
-            nowTime: this.formatToMs(lyricTime[i]),
-            nextTime: lyricTime[i + 1] ? this.formatToMs(lyricTime[i + 1]) : 0
-          })
+          if (lyricTime[i]) {
+            this.lyric.push({
+              lyric: [lyric[i], transLyric[i]],
+              nowTime: this.formatToMs(lyricTime[i]),
+              nextTime: lyricTime[i + 1] ? this.formatToMs(lyricTime[i + 1]) : 0
+            })
+          }
         }
       } else {
         for (let i = 0; i < lyric.length; i++) {
@@ -117,6 +125,7 @@ export default {
         next: this.formatToMs(lyricTime[0]),
         nowTime: 0
       })
+
       this.lyricInfo = this.lyricInfo ? '歌词上传者：' + this.lyricInfo.nickname : ''
       this.lyricTransInfo = this.lyricTransInfo ? '翻译上传者：' + this.lyricTransInfo.nickname : ''
       this.lyric.push({
