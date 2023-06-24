@@ -58,7 +58,6 @@ export default {
   },
   methods: {
     formatToMs(timeStr) {
-      console.log(timeStr)
       let [minutes, timeString] = timeStr.split(':').map(str => str)
       minutes = Number(minutes)
       let [seconds, milliseconds] = timeString.split('.').map(str => parseInt(str))

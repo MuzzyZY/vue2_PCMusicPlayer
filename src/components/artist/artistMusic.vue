@@ -1,6 +1,6 @@
 <template>
-  <div class="artistList">
-    <h2>this is artist page</h2>
+  <div>
+    <h2>music</h2>
   </div>
 </template>
 

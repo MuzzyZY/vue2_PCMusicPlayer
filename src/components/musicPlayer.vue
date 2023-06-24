@@ -21,10 +21,10 @@
     </div>
     <div class="middle">
       <div class="controller">
-        <div class="el-icon-caret-left"></div>
+        <div class="el-icon-caret-left" @click="goBackPlay"></div>
         <div class="el-icon-video-pause" v-if="isPlay" @click="play"></div>
         <div class="el-icon-video-play" v-else @click="pause"></div>
-        <div class="el-icon-caret-right"></div>
+        <div class="el-icon-caret-right" @click="nextSong"></div>
       </div>
       <div class="slideBox">
         <el-slider v-model="slideValue" :step='1' :min="0" :max="(info?Number((info.dt/1000).toFixed(2)):2)" :format-tooltip="formatTooltip" @change="changeSlide"></el-slider>
@@ -65,13 +65,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['musicId']),
+    ...mapState(['musicId', 'playList', 'historyPlay']),
     songsDuration() {
       return this.info ? Number((this.info.dt / 1000).toFixed(2)) : ''
     }
   },
   methods: {
-    ...mapMutations(['updateSlideVal']),
+    ...mapMutations(['updateSlideVal', 'setMusicId', 'updateHistoryList']),
     changePicCover(boolean) {
       this.picCover = boolean
     },
@@ -91,6 +91,26 @@ export default {
           }
         })
       }
+    },
+    goBackPlay() {
+      if (this.historyPlay.length === 1) {
+        return this.$message({
+          type: 'warning',
+          message: '已经是最往前的一首歌了'
+        })
+      }
+      this.setMusicId(this.historyPlay[1])
+      this.historyPlay.shift()
+    },
+    nextSong() {
+      if (this.playList.length === 1) {
+        return this.$message({
+          type: 'warning',
+          message: '已经是最后一首歌了'
+        })
+      }
+      this.setMusicId(this.playList[1].id)
+      this.playList.shift()
     },
     formatTooltip(val) {
       let m = parseInt(val / 60)
@@ -123,6 +143,8 @@ export default {
               if (second <= 0) {
                 this.audio.pause()
                 clearInterval(this.timer)
+                this.playList.shift()
+                this.setMusicId(this.playList[0].id)
               }
             }, 1000)
           })
@@ -150,6 +172,8 @@ export default {
               if (second <= 0) {
                 that.audio.pause()
                 clearInterval(that.timer)
+                this.playList.shift()
+                this.setMusicId(this.playList[0].id)
               }
             }, 1000)
           })
@@ -295,13 +319,15 @@ export default {
   margin-right: 20px;
   width: 20%;
   height: 100%;
-  .choseQuality {
+  .choseQuality,
+  .choseSpeed {
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 80px;
+    width: 100px;
     height: 30px;
+    margin-right: 10px;
     color: rgb(236, 65, 65);
     border: 1px solid rgb(236, 65, 65);
   }

@@ -17,6 +17,10 @@ export function suggestSearch(keyword = '', limit = 10) {
 export function playSong(id, quality = 'standard') {
   return service(`/song/url/v1?id=${id}&level=${quality}`)
 }
+// 获取相似歌曲
+export function similarSong(id) {
+  return service(`/simi/song?id=${id}`)
+}
 // 音乐详情
 export function songsInfo(id) {
   return service(`/song/detail?ids=${id}`)
@@ -97,4 +101,21 @@ export function getRankList() {
 // 获取播放榜单详情
 export function getRankListDetail(id) {
   return service(`/playlist/detail?id=${id}`)
+}
+
+// 获取歌手列表
+export function getArtist(limit = 30, offset = 0, type = -1, area = -1) {
+  return service(`/artist/list?limit=${limit}&offset=${offset}&type=${type}&area=${area}`)
+}
+// 获取歌手详情
+export function getArtistDetail(id) {
+  return service(`/artist/detail?id=${id}`)
+}
+// 获取歌手专辑
+export function getArtistAlbum(id, limit = 30, offset = 0) {
+  return service(`/artist/album?id=${id}&limit=${limit}&offset=${offset}`)
+}
+// 获取专辑信息
+export function getAlbumInfo(id) {
+  return service(`/album?id=${id}`)
 }

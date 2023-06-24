@@ -27,7 +27,7 @@ const routes = [
       },
       {
         path: '/artists',
-        component: () => import(/* webpackChunkName: "about" */ '../components/artistsList.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../components/artist/artistsList.vue')
       },
       {
         path: '/newsongs',
@@ -60,6 +60,11 @@ const routes = [
     path: '/seelyric',
     name: 'seelyric',
     component: () => import(/* webpackChunkName: "about" */ '../components/showLyric.vue')
+  },
+  {
+    path: '/artistdetail',
+    name: 'artistdetail',
+    component: () => import(/* webpackChunkName: "about" */ '../components/artist/artistDetail.vue')
   }
 ]
 const originalPush = VueRouter.prototype.push

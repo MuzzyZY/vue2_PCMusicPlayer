@@ -5,7 +5,7 @@
     </header>
     <div class="content artist" v-if="searchType==100">
       <ul>
-        <li v-for="artist in detail" :key="artist.id">
+        <li v-for="artist in detail" :key="artist.id" @dblclick="toDetail(artist.id)">
           <div class="img"><img :src="artist.picUrl" alt=""></div>
           <div class="name">
             {{artist.name}}
@@ -46,7 +46,16 @@ export default {
       }
     })
   },
-  mounted() {}
+  methods: {
+    toDetail(id) {
+      this.$router.push({
+        path: '/artistdetail',
+        query: {
+          id
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -66,6 +75,8 @@ header {
     width: 100%;
     height: auto;
     li {
+      user-select: none;
+      cursor: pointer;
       display: flex;
       justify-content: flex-start;
       align-items: center;

@@ -77,7 +77,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setMusicId']),
+    ...mapMutations(['setMusicId', 'updateHistoryList']),
     seeMv(id) {
       console.log(id)
     },
@@ -108,6 +108,7 @@ export default {
       })
     },
     playMusic(id) {
+      this.updateHistoryList(id)
       this.setMusicId(id)
     }
   },

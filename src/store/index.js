@@ -6,8 +6,10 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     musicId: '',
+    playList: [],
     slideValue: 0,
-    currentTab: ''
+    currentTab: '个性推荐',
+    historyPlay: []
   },
   getters: {
   },
@@ -20,6 +22,13 @@ export default new Vuex.Store({
     },
     updateCurrentTab(state, value) {
       state.currentTab = value
+    },
+    updatePlayList(state, value) {
+      state.playList = (value)
+    },
+    updateHistoryList(state, value) {
+      state.historyPlay.unshift(value)
+      console.log(state.historyPlay)
     }
   },
   actions: {
