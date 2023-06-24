@@ -86,6 +86,6 @@ export function getUserInfo(cookie) {
 }
 
 // 获取歌单
-export function getPopSongsList(limit = 30, before = 0) {
-  return service(`/top/playlist/highquality?before=${before}&limit=${limit}`)
+export function getPopSongsList(limit = 60, offset = 0, order = 'hot') {
+  return service(`/top/playlist?limit=${limit}&offset=${offset}&order=${order}`)
 }

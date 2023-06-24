@@ -133,7 +133,6 @@ export default {
         next: 0,
         nowTime: 0
       })
-      console.log(this.lyric)
     })
   }
 }
