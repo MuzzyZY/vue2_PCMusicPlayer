@@ -40,7 +40,7 @@
       <div class="list">
         <ul>
           <li v-for="(song,index) in listData" :key="song.index">
-            <div class="info" @click="playMusic(song.id)">
+            <div class="info" @click="playMusic(song.id,index)">
               <div class="name">
                 {{((index+1<10)?(currentPage===1)?'0':'':'') + ((index+1)+(currentPage-1)*30)}} - {{song.name}}
                 <span v-if="song.fee!=0?song.fee!=8:false">vip</span>
@@ -77,7 +77,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setMusicId', 'updateHistoryList']),
+    ...mapMutations(['setMusicId', 'updateHistoryList', 'updatePlayList']),
     seeMv(id) {
       console.log(id)
     },
@@ -107,7 +107,10 @@ export default {
         }
       })
     },
-    playMusic(id) {
+    playMusic(id, index) {
+      let temp = this.listData.slice(index, this.listData.length - 1)
+      let res = JSON.stringify(temp)
+      this.updatePlayList(JSON.parse(res))
       this.updateHistoryList(id)
       this.setMusicId(id)
     }
