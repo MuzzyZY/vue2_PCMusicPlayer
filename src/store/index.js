@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     musicId: '',
-    slideValue: 0
+    slideValue: 0,
+    currentTab: ''
   },
   getters: {
   },
@@ -16,6 +17,9 @@ export default new Vuex.Store({
     },
     updateSlideVal(state, value) {
       state.slideValue = value
+    },
+    updateCurrentTab(state, value) {
+      state.currentTab = value
     }
   },
   actions: {

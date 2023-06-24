@@ -38,7 +38,6 @@ export default {
     search(this.searchKey, 30, 0, this.searchType).then(res => {
       if (res.code === 200) {
         this.detail = res.result.artists
-        console.log(this.detail)
       } else {
         this.$message({
           message: '请求失败',

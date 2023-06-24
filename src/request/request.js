@@ -89,3 +89,12 @@ export function getUserInfo(cookie) {
 export function getPopSongsList(limit = 60, offset = 0, order = 'hot') {
   return service(`/top/playlist?limit=${limit}&offset=${offset}&order=${order}`)
 }
+
+// 获取播放榜单
+export function getRankList() {
+  return service('/toplist/detail')
+}
+// 获取播放榜单详情
+export function getRankListDetail(id) {
+  return service(`/playlist/detail?id=${id}`)
+}

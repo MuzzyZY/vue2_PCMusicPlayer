@@ -83,7 +83,6 @@ export default {
     },
     pageChange(page) {
       this.currentPage = page
-      console.log(this.$refs.page)
       if (page === this.$refs.page.internalPageCount) {
         getListSongs(this.$router.currentRoute.query.id, this.$refs.page.total - (page - 1) * 30, page).then(res => {
           if (res.code === 200) {
@@ -117,6 +116,7 @@ export default {
     getListDetail(id).then(res => {
       if (res.code === 200) {
         this.listInfo = res.playlist
+        console.log(this.listInfo.tags.length)
         getListSongs(id, 30, 0).then(res => {
           if (res.code === 200) {
             this.listData = res.songs

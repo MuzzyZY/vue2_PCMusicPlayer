@@ -1,11 +1,11 @@
 <template>
   <div class="discover">
     <div class="navBar" @click="changeActive($event)">
-      <router-link to="/" class="active">个性推荐</router-link>
-      <router-link to="/songlist">歌单</router-link>
-      <router-link to="/totallist">排行榜</router-link>
-      <router-link to="/artists">歌手</router-link>
-      <router-link to="/newsongs">最新音乐</router-link>
+      <router-link to="/" :class="{active:active==='个性推荐'}">个性推荐</router-link>
+      <router-link to="/songlist" :class="{active:active==='歌单'}">歌单</router-link>
+      <router-link to="/totallist" :class="{active:active==='排行榜'}">排行榜</router-link>
+      <router-link to="/artists" :class="{active:active==='歌手'}">歌手</router-link>
+      <router-link to="/newsongs" :class="{active:active==='最新音乐'}">最新音乐</router-link>
     </div>
     <div class="content">
       <keep-alive>
@@ -16,16 +16,27 @@
 </template>
 
 <script>
+import { mapMutations, mapState } from 'vuex'
 export default {
-  methods: {
-    changeActive(e) {
-      for (let item of e.target.parentNode.children) {
-        if (item.classList.contains('active')) {
-          item.classList.remove('active')
-        }
-      }
-      e.target.classList.add('active')
+  data() {
+    return {
+      active: '个性推荐'
     }
+  },
+  computed: {
+    ...mapState(['currentTab'])
+  },
+  methods: {
+    ...mapMutations(['updateCurrentTab']),
+    changeActive(e) {
+      if (e.target.tagName === 'A') {
+        this.active = e.target.innerHTML
+        this.updateCurrentTab(e.target.innerHTML)
+      }
+    }
+  },
+  created() {
+    this.active = this.currentTab
   }
 }
 </script>
