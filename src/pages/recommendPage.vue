@@ -65,6 +65,7 @@
 
 <script>
 import { getBanner, getRecommandList, getDaylyRecommand, getRecommandProgram, personalizedProgram } from '@/request/request'
+import { Loading } from 'element-ui'
 export default {
   data() {
     return {
@@ -132,6 +133,7 @@ export default {
     })
   },
   created() {
+    let loadingInstance = Loading.service({ lock: true, fullscreen: true })
     getRecommandList(9).then(res => {
       if (res.code === 200) {
         this.recommandList = res.result
@@ -165,6 +167,7 @@ export default {
         })
       }
     })
+    loadingInstance.close()
   }
 }
 </script>

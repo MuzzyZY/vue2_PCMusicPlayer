@@ -30,6 +30,7 @@
 <script>
 import { getAlbumInfo, getArtistAlbum } from '@/request/request'
 import { mapMutations } from 'vuex'
+import { Loading } from 'element-ui'
 export default {
   props: ['artistId'],
   data() {
@@ -40,6 +41,7 @@ export default {
   },
   created() {
     getArtistAlbum(this.artistId).then(res => {
+      let loadingInstance = Loading.service({ lock: true, fullscreen: true })
       let list = res.hotAlbums
       list.forEach(item => {
         getAlbumInfo(item.id).then(res1 => {
@@ -47,6 +49,7 @@ export default {
         })
       })
       this.albumList = list
+      loadingInstance.close()
     })
   },
   methods: {

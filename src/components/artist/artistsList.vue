@@ -34,11 +34,15 @@
         </li>
       </ul>
     </div>
+    <div class="seeMore" @click="seeMore">
+      查看更多
+    </div>
   </div>
 </template>
 
 <script>
 import { getArtist } from '@/request/request'
+import { Loading } from 'element-ui'
 export default {
   data() {
     return {
@@ -72,21 +76,22 @@ export default {
           id
         }
       })
+    },
+    seeMore() {
+      this.count++
+      getArtist(30, (this.count - 1) * 30, this.kindRadio, this.langRadio).then(res => {
+        let loadingInstance = Loading.service({ lock: true, fullscreen: true })
+        this.artistList.push(...res.artists)
+        loadingInstance.close()
+      })
     }
   },
   created() {
     getArtist(30, (this.count - 1) * 30, -1, -1).then(res => {
+      let loadingInstance = Loading.service({ lock: true, fullscreen: true })
       this.artistList = res.artists
+      loadingInstance.close()
     })
-    let that = this
-    document.querySelector('section').onscroll = function () {
-      if (Math.floor(parseInt(this.scrollTop) / 535) === that.count) {
-        that.count++
-        getArtist(30, (that.count - 1) * 30, that.kindRadio, that.langRadio).then(res => {
-          that.artistList.push(...res.artists)
-        })
-      }
-    }
   }
 }
 </script>
@@ -126,5 +131,12 @@ export default {
       }
     }
   }
+}
+.seeMore {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  cursor: pointer;
 }
 </style>

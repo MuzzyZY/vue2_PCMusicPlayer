@@ -36,6 +36,7 @@
 
 <script>
 import { getRankList } from '@/request/request'
+import { Loading } from 'element-ui'
 export default {
   data() {
     return {
@@ -46,8 +47,10 @@ export default {
   created() {
     getRankList().then(res => {
       if (res.code === 200) {
+        let loadingInstance = Loading.service({ lock: true, fullscreen: true })
         this.detailList = res.list.splice(0, 4)
         this.globalList = res.list
+        loadingInstance.close()
       }
     })
   },

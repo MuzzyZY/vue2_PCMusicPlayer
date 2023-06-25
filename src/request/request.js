@@ -115,7 +115,16 @@ export function getArtistDetail(id) {
 export function getArtistAlbum(id, limit = 30, offset = 0) {
   return service(`/artist/album?id=${id}&limit=${limit}&offset=${offset}`)
 }
+// 获取歌手单曲
+export function getArtistMusic(id, limit = 50, offset = 0, order = 'hot') {
+  return service(`/artist/songs?id=${id}&limit=${limit}&offset=${offset}&order=${order}`)
+}
 // 获取专辑信息
 export function getAlbumInfo(id) {
   return service(`/album?id=${id}`)
+}
+
+// 获取新歌速递
+export function getNewSongs(area = 0) {
+  return service(`/top/song?type=${area}`)
 }

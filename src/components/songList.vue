@@ -31,6 +31,7 @@
 
 <script>
 import { getPopSongsList } from '@/request/request'
+import { Loading } from 'element-ui'
 export default {
   data() {
     return {
@@ -73,7 +74,9 @@ export default {
     getPopSongsList(60).then(res => {
       this.totalCount = res.total
       if (res.code === 200) {
+        let loadingInstance = Loading.service({ lock: true, fullscreen: true })
         this.songList = res.playlists
+        loadingInstance.close()
       }
     })
   }

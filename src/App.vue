@@ -9,7 +9,9 @@
         <router-link to="/myinfo">myInfo</router-link>
       </aside>
       <section>
-        <router-view></router-view>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </section>
     </article>
     <footer>

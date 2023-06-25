@@ -15,22 +15,27 @@ const routes = [
     children: [
       {
         path: '/',
+        name: 'recommend',
         component: () => import(/* webpackChunkName: "about" */ '../pages/recommendPage.vue')
       },
       {
-        path: '/songlist',
+        path: 'songlist',
+        name: 'songlist',
         component: () => import(/* webpackChunkName: "about" */ '../components/songList.vue')
       },
       {
-        path: '/totallist',
+        path: 'totallist',
+        name: 'totallist',
         component: () => import(/* webpackChunkName: "about" */ '../components/totalList.vue')
       },
       {
-        path: '/artists',
+        path: 'artists',
+        name: 'artists',
         component: () => import(/* webpackChunkName: "about" */ '../components/artist/artistsList.vue')
       },
       {
-        path: '/newsongs',
+        path: 'newsongs',
+        name: 'newsongs',
         component: () => import(/* webpackChunkName: "about" */ '../components/newSongs.vue')
       }
     ],
@@ -80,7 +85,7 @@ VueRouter.prototype.replace = function push(location, onResolve, onReject) {
 }
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: 'hash',
   base: process.env.BASE_URL,
   routes
 })
