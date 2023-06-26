@@ -52,7 +52,7 @@
     <div class="personalize">
       <h2>独家推送</h2>
       <ul>
-        <li v-for="program in personalizedList" :key="program.index" @click="toPersonalize(program.id)">
+        <li v-for="(program,index) in personalizedList" :key="program.index" @click="toPersonalize(program.id,index)">
           <div class="img"><img :src="program.picUrl" alt=""></div>
           <div class="desc">
             {{program.name}}
@@ -64,9 +64,9 @@
 </template>
 
 <script>
-import { getBanner, getRecommandList, getRecommandProgram, personalizedProgram } from '@/request/request'
+import { getBanner, getProgramInfo, getRecommandList, getRecommandProgram, personalizedProgram } from '@/request/request'
 import { Loading } from 'element-ui'
-import { mapState } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 export default {
   data() {
     return {
@@ -94,6 +94,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['setMusicId']),
     go163Music(pic) {
       console.log(pic)
       if (pic.targetType === 1) {
@@ -113,17 +114,28 @@ export default {
       })
     },
     toProgramDetail(id) {
-      this.$router.push({
-        path: '/play/program',
-        query: { id }
+      getProgramInfo(id).then(res => {
+        if (res.code === 200) {
+          let id = res.program.mainSong.id
+          this.setMusicId(id)
+        }
       })
     },
-    toPersonalize(id) {
-      console.log(id)
+    toPersonalize(id, index) {
+      let info = {
+        name: this.personalizedList[index].name
+      }
+      this.$router.push({
+        path: '/play',
+        query: {
+          id,
+          info
+        }
+      })
     },
     getDayly() {
       if (this.isLogin) {
-        console.log('already login')
+        this.$router.push('/daily')
       } else {
         this.$message({
           type: 'warning',

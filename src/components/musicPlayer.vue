@@ -65,13 +65,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['musicId', 'playList', 'historyPlay']),
+    ...mapState(['musicId', 'playList', 'historyPlay', 'play']),
     songsDuration() {
       return this.info ? Number((this.info.dt / 1000).toFixed(2)) : ''
     }
   },
   methods: {
-    ...mapMutations(['updateSlideVal', 'setMusicId', 'updateHistoryList']),
+    ...mapMutations(['updateSlideVal', 'setMusicId', 'updateHistoryList', 'updateRadio']),
     changePicCover(boolean) {
       this.picCover = boolean
     },
@@ -128,6 +128,8 @@ export default {
     pause() {
       if (!this.audio) return false
       this.isPlay = true
+      this.updateRadio(this.audio)
+
       let playPromise = this.audio.play()
       if (playPromise) {
         playPromise
@@ -189,10 +191,18 @@ export default {
     }
   },
   watch: {
+    play(value) {
+      if (!value) {
+        clearInterval(this.timer)
+        this.audio.pause()
+        this.isPlay = false
+      }
+    },
     slideValue(val) {
       this.updateSlideVal(val)
     },
     musicId(value) {
+      if (value === '') return
       this.music = value
       songsInfo(this.music).then(res => {
         this.info = res.songs[0]
@@ -211,6 +221,7 @@ export default {
         this.audio = new Audio()
         this.audio.src = this.musicUrl
         this.playAudio()
+        this.updateRadio(this.audio)
       })
     }
   }

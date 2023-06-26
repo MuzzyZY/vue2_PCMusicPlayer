@@ -62,7 +62,7 @@
 
 <script>
 import { mapMutations } from 'vuex'
-import { getSeachKeyword, suggestSearch, getQrKey, getQr, CheckQrStatus, getUserInfo } from '../request/request'
+import { getSeachKeyword, suggestSearch, getQrKey, getQr, CheckQrStatus, getUserInfo, exitLogin } from '../request/request'
 
 export default {
   data() {
@@ -224,7 +224,14 @@ export default {
       })
     },
     exit() {
-      console.log(1)
+      exitLogin().then(res => {
+        if (res.code === 200) {
+          this.isLogin = false
+          localStorage.removeItem('cookie')
+          this.$router.push('/')
+          location.reload()
+        }
+      })
     }
   },
   mounted() {

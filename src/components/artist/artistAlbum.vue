@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="list" v-for="item in albumList" :key="item.id">
+    <div class="list" v-for="(item,bIndex) in albumList" :key="item.id">
       <div class="left">
         <div class="img">
           <img :src="item.picUrl" alt="">
@@ -15,6 +15,9 @@
               <span>{{index<9?'0'+(index+1):(index+1)}}</span>
               <div class="name">{{song.name}}</div>
               <span class="vip" v-if="song?(song.fee!=0?song.fee!=8:false):false">vip</span>
+            </div>
+            <div class="mv">
+              <span class="el-icon-video-camera" v-if="(song.mv!==0)" @click="seeMv(song.mv,bIndex,index)"></span>
             </div>
             <div class="duration">
               {{(song.dt/1000/60).toFixed(2)}}
@@ -80,6 +83,19 @@ export default {
         this.albumList = list
       })
       document.querySelector('section').scrollTop = Math.floor(scrollTop / 2) - 300
+    },
+    seeMv(id, bIndex, index) {
+      let info = {
+        name: this.albumList[bIndex].songs[index].name,
+        artist: this.albumList[bIndex].songs[index].ar
+      }
+      this.$router.push({
+        path: '/play',
+        query: {
+          id,
+          info
+        }
+      })
     }
   }
 }
@@ -124,6 +140,21 @@ export default {
       line-height: 30px;
       align-items: center;
       justify-content: space-between;
+      position: relative;
+      .mv {
+        position: absolute;
+        left: 80%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        line-height: 30px;
+        width: 30px;
+        height: 30px;
+        span {
+          cursor: pointer;
+          font-size: 26px;
+        }
+      }
       .box {
         display: flex;
         align-items: center;
@@ -136,6 +167,7 @@ export default {
           -webkit-box-orient: vertical;
           overflow: hidden;
           text-overflow: ellipsis;
+          width: 70%;
           margin: 0 20px;
         }
         .vip {

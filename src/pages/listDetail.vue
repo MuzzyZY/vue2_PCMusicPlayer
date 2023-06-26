@@ -35,7 +35,7 @@
     </div>
     <div class="songsList">
       <div class="songsCount">
-        <h3><span class="el-icon-video-play"></span>播放全部 共{{listInfo.trackCount}}首</h3>
+        <h3 @click="playAll"><span class="el-icon-video-play"></span>播放全部 共{{listInfo.trackCount}}首</h3>
       </div>
       <div class="list">
         <ul>
@@ -52,7 +52,7 @@
               </div>
             </div>
             <div class="mv">
-              <span class="el-icon-video-camera" v-if="(song.mv!==0)" @click="seeMv(song.mv)"></span>
+              <span class="el-icon-video-camera" v-if="(song.mv!==0)" @click="seeMv(song.mv,index)"></span>
             </div>
           </li>
         </ul>
@@ -78,8 +78,18 @@ export default {
   },
   methods: {
     ...mapMutations(['setMusicId', 'updateHistoryList', 'updatePlayList']),
-    seeMv(id) {
-      console.log(id)
+    seeMv(id, index) {
+      let info = {
+        name: this.listData[index].name,
+        artist: this.listData[index].ar
+      }
+      this.$router.push({
+        path: '/play',
+        query: {
+          id,
+          info
+        }
+      })
     },
     pageChange(page) {
       this.currentPage = page
@@ -107,6 +117,12 @@ export default {
         }
       })
     },
+    playAll() {
+      let temp = this.listData.slice(0, this.listData.length - 1)
+      let res = JSON.stringify(temp)
+      this.updatePlayList(JSON.parse(res))
+      this.setMusicId(temp[0].id)
+    },
     playMusic(id, index) {
       let temp = this.listData.slice(index, this.listData.length - 1)
       let res = JSON.stringify(temp)
@@ -120,7 +136,6 @@ export default {
     getListDetail(id).then(res => {
       if (res.code === 200) {
         this.listInfo = res.playlist
-        console.log(this.listInfo.tags.length)
         getListSongs(id, 30, 0).then(res => {
           if (res.code === 200) {
             this.listData = res.songs
@@ -147,7 +162,9 @@ export default {
   width: 100%;
   height: 100%;
   > .info {
-    height: 180px;
+    display: flex;
+    flex-direction: column;
+    height: 220px;
     border-bottom: 1px solid #ccc;
     .top {
       width: 100%;
@@ -202,7 +219,7 @@ export default {
     .bottom {
       display: flex;
       width: 100%;
-      height: 25%;
+      height: 20%;
       .tag {
         width: 80%;
         height: 100%;

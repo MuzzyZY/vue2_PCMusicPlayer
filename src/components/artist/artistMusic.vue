@@ -19,7 +19,10 @@
           </div>
           <div class="name overFlow">
             {{item.name}}
-            <span v-if="item.fee!=0?item.fee!=8:false">vip</span>
+            <span class="vip" v-if="item.fee!=0?item.fee!=8:false">vip</span>
+            <div class="mv">
+              <span class="el-icon-video-camera" v-if="(item.mv!==0)" @click="seeMv(item.mv,index)"></span>
+            </div>
           </div>
           <div class="artist overFlow">
             <span v-for="singer in item.ar" :key='singer.index'>
@@ -65,6 +68,19 @@ export default {
       this.sortType = val
       this.page = 1
       this.getMusic()
+    },
+    seeMv(id, index) {
+      let info = {
+        name: this.list.songs[index].name,
+        artist: this.list.songs[index].ar
+      }
+      this.$router.push({
+        path: '/play',
+        query: {
+          id,
+          info
+        }
+      })
     },
     getMusic() {
       getArtistMusic(this.artistId, 50, (this.page - 1) * 50, this.sortType).then(res => {
@@ -137,13 +153,28 @@ export default {
           align-content: center;
         }
         .name {
+          position: relative;
           width: 50%;
           height: 100%;
-          span {
+          .vip {
             padding: 0 2px;
             font-size: 12px;
             color: rgb(254, 145, 103);
             border: 1px solid rgb(254, 145, 103);
+          }
+          .mv {
+            position: absolute;
+            left: 90%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 10%;
+            height: 100%;
+            text-align: center;
+            line-height: 50px;
+            span {
+              cursor: pointer;
+              font-size: 26px;
+            }
           }
         }
         .artist {

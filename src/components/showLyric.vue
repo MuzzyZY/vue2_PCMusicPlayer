@@ -16,7 +16,10 @@
         </div>
       </div>
     </div>
-    <div class="lyric">
+    <div class="noLyric" v-if="noLyric">
+      <h2>节目无歌词</h2>
+    </div>
+    <div class="lyric" v-else>
       <ul ref='lyricList'>
         <li v-for="(item,index) in lyric" :key="index" :class="{active:currentTime*1000>item.nowTime&&currentTime*1000<item.nextTime}">
           <div v-for='(lyric,index) in item.lyric' :key="index">
@@ -39,7 +42,8 @@ export default {
       lyricInfo: null,
       lyricTransInfo: null,
       lyric: [],
-      currentTime: 0
+      currentTime: 0,
+      noLyric: false
     }
   },
   computed: {
@@ -67,9 +71,12 @@ export default {
   created() {
     this.musicId = this.$router.currentRoute.query.id
     songsInfo(this.musicId).then(res => {
+      console.log(res)
       this.info = res.songs[0]
+      console.log(this.info)
     })
     getLyric(this.musicId).then(res => {
+      if (res.lrc.lyric === '') return (this.noLyric = true)
       this.lyricInfo = res.lyricUser
       this.lyricTransInfo = res.transUser
       let lyric = res.lrc.lyric
@@ -195,5 +202,11 @@ export default {
       font-size: 20px;
     }
   }
+}
+.noLyric {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
 }
 </style>

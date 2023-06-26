@@ -10,7 +10,9 @@ export default new Vuex.Store({
     slideValue: 0,
     historyPlay: [],
     userInfo: null,
-    isLogin: false
+    isLogin: false,
+    radio: null,
+    play: false
   },
   getters: {
   },
@@ -34,6 +36,14 @@ export default new Vuex.Store({
     },
     updateIsLogin(state, value) {
       state.isLogin = value
+    },
+    updateRadio(state, value) {
+      state.radio = value
+      state.play = true
+    },
+    pauseRadio(state) {
+      state.radio.pause()
+      state.play = false
     }
   },
   actions: {

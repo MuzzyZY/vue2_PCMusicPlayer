@@ -58,6 +58,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "laterSeeChunk" */ '../pages/listDetail.vue')
   },
   {
+    path: '/daily',
+    name: 'daily',
+    component: () => import(/* webpackChunkName: "laterSeeChunk" */ '../components/dailyRecommond.vue')
+  },
+  {
     path: '/seelyric',
     name: 'seelyric',
     component: () => import(/* webpackChunkName: "laterSeeChunk" */ '../components/showLyric.vue')
@@ -70,17 +75,23 @@ const routes = [
   {
     path: '/play',
     name: 'play',
-    component: () => import(/* webpackChunkName: "laterSeeChunk" */ '../components/video/videoPlayer.vue'),
-    children: [
-      {
-        path: 'program',
-        component: () => import(/* webpackChunkName: "laterSeeChunk" */ '../components/video/programPlayer.vue')
-      },
-      {
-        path: 'mv',
-        component: () => import(/* webpackChunkName: "laterSeeChunk" */ '../components/video/mvPlayer.vue')
+    component: () => import(/* webpackChunkName: "laterSeeChunk" */ '../components/videoPlayer.vue'),
+    beforeEnter: (to, from, next) => {
+      console.dir(router.app.$store.state.radio)
+      if (router.app.$store.state.radio.paused || !router.app.$store.state.radio) {
+        return next()
       }
-    ]
+      router.app.$message({
+        type: 'warning',
+        message: '当前音乐未关闭，为您暂停'
+      })
+      router.app.$store.commit('pauseRadio')
+      next()
+    }
+  },
+  {
+    path: '*',
+    component: () => import(/* webpackChunkName: "laterSeeChunk" */ '../pages/page404.vue')
   }
 ]
 const originalPush = VueRouter.prototype.push

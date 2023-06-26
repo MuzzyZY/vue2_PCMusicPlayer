@@ -49,6 +49,10 @@ export function getProgramInfo(id) {
 export function personalizedProgram() {
   return service('/personalized/privatecontent')
 }
+// 获取MV播放源
+export function mvPlayer(id) {
+  return service(`/mv/url?id=${id}`)
+}
 
 // 获取歌单信息
 export function getListDetail(id) {
@@ -95,6 +99,10 @@ export function getUserInfo(cookie) {
 // 获取用户歌单
 export function getUserSongsList(id) {
   return service(`/user/playlist?uid=${id}`)
+}
+// 退出登录
+export function exitLogin() {
+  return service('/logout')
 }
 
 // 获取歌单

@@ -1,8 +1,15 @@
 <template>
-  <div class="searchList">
-    <header>
-      <h2>搜索：{{searchKey}}</h2>
-    </header>
+  <div>
+    <div class="top">
+      <div class="icon">
+        <div class="el-icon-date" style="font-size:80px;"></div>
+        <span>{{date}}</span>
+      </div>
+      <div class="text">
+        <h3>每日歌曲推荐</h3>
+        <div class="tips">根据你的音乐口味生成，每天6:00更新</div>
+      </div>
+    </div>
     <div class="content">
       <ul>
         <li>
@@ -11,10 +18,11 @@
           <div class="album">专辑</div>
           <div class="songsTime">时长</div>
         </li>
-        <li v-for="(item,index) in list.songs" :key='item.index' @dblclick="playMusic(item.id)" @click="toDetail($event)">
-          <div class=" index overFlow">{{((index+1<10)?(currentPage===1)?'0':'':'') + ((index+1)+(currentPage-1)*30)}}
+        <li v-for="(item,index) in list" :key='item.index' @dblclick="playMusic(item.id)" @click="toDetail($event)">
+          <div class=" index overFlow">{{((index+1<10)?'0'+(index+1):(index+1))}}
           </div>
           <div class="name overFlow">
+            <div class="reason">{{item.reason}}</div>
             {{item.name}}
             <span class="vip" v-if="item.fee!=0?item.fee!=8:false">vip</span>
             <div class="mv">
@@ -31,55 +39,42 @@
         </li>
       </ul>
     </div>
-    <div class="bottom">
-      <el-pagination background layout="prev, pager, next" :total="Number(searchTotal)" :current-page="currentPage" @current-change='pageChange' :page-size="30">
-      </el-pagination>
-    </div>
   </div>
 </template>
 
 <script>
-import { search } from '@/request/request'
+import { getDaylyRecommand } from '@/request/request'
 import { mapMutations } from 'vuex'
 export default {
   data() {
     return {
-      list: [],
-      searchKey: '',
-      searchTotal: '',
-      currentPage: 1,
-      visible: false
+      list: null
     }
   },
-  watch: {
-    $route(to, from) {
-      if (this.$route.query.keyword) {
-        this.searchData()
-        let temp = this.$refs.dotList.findIndex(item => {
-          return item.classList.contains('active')
-        })
-        this.$refs.dotList[temp].classList.remove('active')
-        this.currentPage = 1
+  computed: {
+    date() {
+      return new Date().getDate()
+    }
+  },
+  created() {
+    getDaylyRecommand(localStorage.cookie).then(res => {
+      if (res.code === 200) {
+        this.list = res.data.dailySongs
       }
-    }
+    })
   },
+
   methods: {
     ...mapMutations(['setMusicId', 'updatePlayList']),
-    searchData() {
-      this.searchKey = this.$router.currentRoute.query.keyword
-      search(this.$router.currentRoute.query.keyword).then(res => {
-        this.list = res.result
-        this.searchTotal = this.list.songCount
-      })
-    },
     playMusic(id) {
+      let temp = JSON.stringify(this.list)
       this.setMusicId(id)
-      this.updatePlayList(this.list)
+      this.updatePlayList(JSON.parse(temp))
     },
     seeMv(id, index) {
       let info = {
-        name: this.list.songs[index].name,
-        artist: this.list.songs[index].ar
+        name: this.list[index].name,
+        artist: this.list[index].ar
       }
       this.$router.push({
         path: '/play',
@@ -88,46 +83,18 @@ export default {
           info
         }
       })
-    },
-    toDetail(e) {
-      if (e.target.parentNode.classList.contains('artist') || e.target.classList.contains('artist')) {
-        this.$router.push({
-          path: '/detail',
-          query: { keyword: this.searchKey, type: 100 }
-        })
-      }
-    },
-    pageChange(val) {
-      this.currentPage = val
-      search(this.searchKey, 30, val - 1).then(res => {
-        this.list = res.result
-      })
-    }
-  },
-  mounted() {
-    this.searchData()
-    document.querySelector('section').oncontextmenu = function (e) {
-      e.preventDefault()
     }
   }
 }
 </script>
 
-<style lang='less' scoped>
-.overFlow {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.searchList {
+<style lang="less" scoped>
+.top {
   display: flex;
-  flex-direction: column;
-}
-header {
-  h2 {
-    text-align: left;
+  align-items: center;
+  .icon {
+    margin-right: 20px;
+    font-size: 30px;
   }
 }
 .content {
@@ -156,6 +123,13 @@ header {
       margin: 10px 0;
       line-height: 40px;
       text-align: center;
+      .overFlow {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
       .title {
         width: 55%;
       }
@@ -179,6 +153,13 @@ header {
         position: relative;
         width: 50%;
         height: 100%;
+        .reason {
+          position: absolute;
+          left: 2%;
+          padding: 0 2px;
+          font-size: 12px;
+          color: rgb(254, 145, 103);
+        }
         .vip {
           padding: 0 2px;
           font-size: 12px;
@@ -213,26 +194,6 @@ header {
         height: 100%;
       }
     }
-  }
-}
-.bottom {
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  margin-top: 40px;
-  .active {
-    background-color: rgb(236, 65, 65) !important;
-    color: #fff;
-  }
-  .dot {
-    width: 30px;
-    height: 30px;
-    text-align: center;
-    line-height: 30px;
-    margin: 0 10px;
-    background-color: rgb(235, 235, 235);
-    cursor: pointer;
-    border-radius: 50%;
   }
 }
 </style>
