@@ -16,60 +16,71 @@ const routes = [
       {
         path: '/',
         name: 'recommend',
-        component: () => import(/* webpackChunkName: "about" */ '../pages/recommendPage.vue')
+        // 懒加载写法
+        component: () => import(/* webpackChunkName: "discoverChunk" */ '../pages/recommendPage.vue')
       },
       {
         path: 'songlist',
         name: 'songlist',
-        component: () => import(/* webpackChunkName: "about" */ '../components/songList.vue')
+        component: () => import(/* webpackChunkName: "discoverChunk" */ '../components/songList.vue')
       },
       {
         path: 'totallist',
         name: 'totallist',
-        component: () => import(/* webpackChunkName: "about" */ '../components/totalList.vue')
+        component: () => import(/* webpackChunkName: "discoverChunk" */ '../components/totalList.vue')
       },
       {
         path: 'artists',
         name: 'artists',
-        component: () => import(/* webpackChunkName: "about" */ '../components/artist/artistsList.vue')
+        component: () => import(/* webpackChunkName: "discoverChunk" */ '../components/artist/artistsList.vue')
       },
       {
         path: 'newsongs',
         name: 'newsongs',
-        component: () => import(/* webpackChunkName: "about" */ '../components/newSongs.vue')
+        component: () => import(/* webpackChunkName: "discoverChunk" */ '../components/newSongs.vue')
       }
     ],
-    component: () => import(/* webpackChunkName: "about" */ '../views/discoverView.vue')
-  },
-  {
-    path: '/myinfo',
-    name: 'myinfo',
-    component: () => import(/* webpackChunkName: "about" */ '../views/myInfoView.vue')
+    component: () => import('../views/discoverView.vue')
   },
   {
     path: '/searchlist',
     name: 'searchList',
-    component: () => import(/* webpackChunkName: "about" */ '../pages/showSearchList.vue')
+    component: () => import(/* webpackChunkName: "laterSeeChunk" */ '../pages/showSearchList.vue')
   },
   {
     path: '/detail',
     name: 'detail',
-    component: () => import(/* webpackChunkName: "about" */ '../pages/detailSearch.vue')
+    component: () => import(/* webpackChunkName: "laterSeeChunk" */ '../pages/detailSearch.vue')
   },
   {
     path: '/listdetail',
     name: 'listDetail',
-    component: () => import(/* webpackChunkName: "about" */ '../pages/listDetail.vue')
+    component: () => import(/* webpackChunkName: "laterSeeChunk" */ '../pages/listDetail.vue')
   },
   {
     path: '/seelyric',
     name: 'seelyric',
-    component: () => import(/* webpackChunkName: "about" */ '../components/showLyric.vue')
+    component: () => import(/* webpackChunkName: "laterSeeChunk" */ '../components/showLyric.vue')
   },
   {
     path: '/artistdetail',
     name: 'artistdetail',
-    component: () => import(/* webpackChunkName: "about" */ '../components/artist/artistDetail.vue')
+    component: () => import(/* webpackChunkName: "laterSeeChunk" */ '../components/artist/artistDetail.vue')
+  },
+  {
+    path: '/play',
+    name: 'play',
+    component: () => import(/* webpackChunkName: "laterSeeChunk" */ '../components/video/videoPlayer.vue'),
+    children: [
+      {
+        path: 'program',
+        component: () => import(/* webpackChunkName: "laterSeeChunk" */ '../components/video/programPlayer.vue')
+      },
+      {
+        path: 'mv',
+        component: () => import(/* webpackChunkName: "laterSeeChunk" */ '../components/video/mvPlayer.vue')
+      }
+    ]
   }
 ]
 const originalPush = VueRouter.prototype.push

@@ -28,8 +28,17 @@
       <div class="userInfo">
         <el-avatar :src='userInfo.profile.avatarUrl'></el-avatar>
       </div>
-      <div class="name">
-        <div>{{userInfo.profile.nickname}}</div>
+      <div class="popOver">
+        <el-col>
+          <el-dropdown trigger="click" @command="exit">
+            <div class="name el-dropdown-link">
+              <div style="user-select: none;">{{userInfo.profile.nickname}}</div>
+            </div>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item icon="el-icon-news">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </el-col>
       </div>
     </div>
     <div class="popOver">
@@ -52,7 +61,9 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import { getSeachKeyword, suggestSearch, getQrKey, getQr, CheckQrStatus, getUserInfo } from '../request/request'
+
 export default {
   data() {
     return {
@@ -67,7 +78,9 @@ export default {
       qrKey: null,
       timer: null,
       tips: null,
-      userInfo: null
+      userInfo: null,
+      // 登录验证
+      cookie: null
     }
   },
   watch: {
@@ -79,6 +92,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['updateUserInfo', 'updateIsLogin']),
     // 获取热搜列表
     getPopSeach() {
       getSeachKeyword().then(res => {
@@ -204,12 +218,22 @@ export default {
             account: res.account,
             profile: res.profile
           }
+          this.updateUserInfo(this.userInfo)
+          this.updateIsLogin(true)
         }
       })
+    },
+    exit() {
+      console.log(1)
     }
   },
   mounted() {
     this.getPopSeach()
+    this.cookie = localStorage.cookie
+    if (this.cookie) {
+      this.getUserInfo()
+      this.isLogin = true
+    }
   }
 }
 </script>
@@ -266,7 +290,7 @@ export default {
   }
 }
 .loginIn,
-.isLogin {
+.isLoginIn {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -274,6 +298,9 @@ export default {
   width: 20%;
   height: 100%;
   cursor: pointer;
+  .name {
+    user-select: none;
+  }
 }
 /deep/ .el-autocomplete-suggestion {
   width: 260px !important;

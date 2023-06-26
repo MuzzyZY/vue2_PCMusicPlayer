@@ -64,8 +64,9 @@
 </template>
 
 <script>
-import { getBanner, getRecommandList, getDaylyRecommand, getRecommandProgram, personalizedProgram } from '@/request/request'
+import { getBanner, getRecommandList, getRecommandProgram, personalizedProgram } from '@/request/request'
 import { Loading } from 'element-ui'
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
@@ -87,6 +88,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['isLogin']),
     todayDate() {
       return new Date().getDate()
     }
@@ -111,20 +113,23 @@ export default {
       })
     },
     toProgramDetail(id) {
-      console.log(id)
+      this.$router.push({
+        path: '/play/program',
+        query: { id }
+      })
     },
     toPersonalize(id) {
       console.log(id)
     },
     getDayly() {
-      getDaylyRecommand().then(res => {
-        if (res.code !== 200) {
-          this.$message({
-            message: '请登录后重试',
-            type: 'warning'
-          })
-        }
-      })
+      if (this.isLogin) {
+        console.log('already login')
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '请登录后重试'
+        })
+      }
     }
   },
   mounted() {
@@ -210,6 +215,7 @@ export default {
     li {
       position: relative;
       width: 18%;
+      min-width: 180px;
       height: 230px;
       max-height: 230px;
       min-height: 160px;
@@ -291,8 +297,8 @@ export default {
     li {
       position: relative;
       width: 18%;
-      height: 230px;
-      max-height: 230px;
+      height: 227px;
+      max-height: 227px;
       min-height: 160px;
       border: 1px solid #ccc;
       margin-top: 20px;

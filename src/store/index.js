@@ -8,7 +8,9 @@ export default new Vuex.Store({
     musicId: '',
     playList: [],
     slideValue: 0,
-    historyPlay: []
+    historyPlay: [],
+    userInfo: null,
+    isLogin: false
   },
   getters: {
   },
@@ -26,6 +28,12 @@ export default new Vuex.Store({
       state.historyPlay.push(value)
       console.log(state.historyPlay)
       state.historyPlay.unshift(value)
+    },
+    updateUserInfo(state, value) {
+      state.userInfo = value
+    },
+    updateIsLogin(state, value) {
+      state.isLogin = value
     }
   },
   actions: {

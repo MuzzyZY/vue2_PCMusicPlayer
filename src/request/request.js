@@ -34,12 +34,16 @@ export function getRecommandList(limit = 9) {
   return service(`/personalized?limit=${limit}`)
 }
 // 获取每日推荐歌单
-export function getDaylyRecommand() {
-  return service('/recommend/resource')
+export function getDaylyRecommand(cookie) {
+  return service(`/recommend/songs?cookie=${cookie}`)
 }
 // 获取推荐节目
 export function getRecommandProgram() {
   return service('/program/recommend')
+}
+// 获取推荐节目详情
+export function getProgramInfo(id) {
+  return service(`/dj/program/detail?id=${id}`)
 }
 // 获取独家放送
 export function personalizedProgram() {
@@ -87,6 +91,10 @@ export function CheckQrStatus(key) {
 // 获取用户信息
 export function getUserInfo(cookie) {
   return service(`/user/account?cookie=${cookie}`)
+}
+// 获取用户歌单
+export function getUserSongsList(id) {
+  return service(`/user/playlist?uid=${id}`)
 }
 
 // 获取歌单

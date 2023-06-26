@@ -6,7 +6,7 @@
     <article>
       <aside>
         <router-link to="/discover">发现音乐</router-link>
-        <router-link to="/myinfo">myInfo</router-link>
+        <userSongList v-if="isLogin"></userSongList>
       </aside>
       <section>
         <keep-alive>
@@ -21,15 +21,21 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import musicPlayer from './components/musicPlayer.vue'
 import searchBar from './components/searchBar.vue'
+import userSongList from './components/userSongList.vue'
 export default {
+  computed: {
+    ...mapState(['isLogin'])
+  },
   data() {
     return {}
   },
   components: {
     searchBar,
-    musicPlayer
+    musicPlayer,
+    userSongList
   }
 }
 </script>
