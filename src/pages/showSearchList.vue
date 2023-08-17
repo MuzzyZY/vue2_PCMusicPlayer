@@ -1,7 +1,7 @@
 <template>
   <div class="searchList">
     <header>
-      <h2>搜索：{{searchKey}}</h2>
+      <h2>搜索：{{ searchKey }}</h2>
     </header>
     <div class="content">
       <ul>
@@ -11,28 +11,30 @@
           <div class="album">专辑</div>
           <div class="songsTime">时长</div>
         </li>
-        <li v-for="(item,index) in list.songs" :key='item.index' @dblclick="playMusic(item.id)" @click="toDetail($event)">
-          <div class=" index overFlow">{{((index+1<10)?(currentPage===1)?'0':'':'') + ((index+1)+(currentPage-1)*30)}}
-          </div>
-          <div class="name overFlow">
-            {{item.name}}
-            <span class="vip" v-if="item.fee!=0?item.fee!=8:false">vip</span>
-            <div class="mv">
-              <span class="el-icon-video-camera" v-if="(item.mv!==0)" @click="seeMv(item.mv,index)"></span>
-            </div>
-          </div>
-          <div class="artist overFlow">
-            <span v-for="singer in item.ar" :key='singer.index'>
-              {{item.ar.length!==1?singer.name+'/':singer.name}}
-            </span>
-          </div>
-          <div class="album overFlow">{{item.al.name}}</div>
-          <div class="songsTime overFlow">{{(item.dt/1000/60).toFixed(2)}}</div>
+        <li v-for="(item, index) in list.songs" :key='item.index' @dblclick="playMusic(item.id)"
+          @click="toDetail($event)">
+          <div class=" index overFlow">{{ ((index + 1 < 10) ? (currentPage === 1) ? '0' : '' : '') + ((index + 1) +
+            (currentPage - 1) * 30) }} </div>
+              <div class="name overFlow">
+                {{ item.name }}
+                <span class="vip" v-if="item.fee != 0 ? item.fee != 8 : false">vip</span>
+                <div class="mv">
+                  <span class="el-icon-video-camera" v-if="(item.mv !== 0)" @click="seeMv(item.mv, index)"></span>
+                </div>
+              </div>
+              <div class="artist overFlow">
+                <span v-for="singer in item.ar" :key='singer.index'>
+                  {{ item.ar.length !== 1 ? singer.name + '/' : singer.name }}
+                </span>
+              </div>
+              <div class="album overFlow">{{ item.al.name }}</div>
+              <div class="songsTime overFlow">{{ (item.dt / 1000 / 60).toFixed(2) }}</div>
         </li>
       </ul>
     </div>
     <div class="bottom">
-      <el-pagination background layout="prev, pager, next" :total="Number(searchTotal)" :current-page="currentPage" @current-change='pageChange' :page-size="30">
+      <el-pagination background layout="prev, pager, next" :total="Number(searchTotal)" :current-page="currentPage"
+        @current-change='pageChange' :page-size="30">
       </el-pagination>
     </div>
   </div>
@@ -55,10 +57,10 @@ export default {
     $route(to, from) {
       if (this.$route.query.keyword) {
         this.searchData()
-        let temp = this.$refs.dotList.findIndex(item => {
-          return item.classList.contains('active')
-        })
-        this.$refs.dotList[temp].classList.remove('active')
+        // let temp = this.$refs.dotList.findIndex(item => {
+        //   return item.classList.contains('active')
+        // })
+        // this.$refs.dotList[temp].classList.remove('active')
         this.currentPage = 1
       }
     }
@@ -69,10 +71,13 @@ export default {
       this.searchKey = this.$router.currentRoute.query.keyword
       search(this.$router.currentRoute.query.keyword).then(res => {
         this.list = res.result
-        this.searchTotal = this.list.songCount
+        if (res.result) {
+          this.searchTotal = this.list.songCount
+        }
       })
     },
     playMusic(id) {
+      console.log(id)
       this.setMusicId(id)
       this.updatePlayList(this.list)
     },
@@ -121,53 +126,67 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .searchList {
   display: flex;
   flex-direction: column;
 }
+
 header {
   h2 {
     text-align: left;
   }
 }
+
 .content {
   flex: 1;
+
   ul {
     position: relative;
+
     .toDetail {
       position: absolute;
       width: 100px;
       height: 40px;
       background-color: rgb(235, 235, 235);
     }
+
     li {
       user-select: none;
+
       &:first-of-type {
         height: 60px;
         background-color: rgb(245, 245, 245);
         line-height: 60px;
       }
+
       &:hover {
         background-color: rgb(242, 242, 243);
       }
+
       display: flex;
       align-items: center;
       height: 40px;
       margin: 10px 0;
       line-height: 40px;
       text-align: center;
+
       .title {
         width: 55%;
       }
+
       .artist {
         width: 20%;
       }
+
       .album {
         width: 20%;
       }
+
       .songsTime {
         width: 5%;
       }
+
       .index {
         width: 5%;
         height: 100%;
@@ -175,16 +194,19 @@ header {
         justify-content: center;
         align-content: center;
       }
+
       .name {
         position: relative;
         width: 50%;
         height: 100%;
+
         .vip {
           padding: 0 2px;
           font-size: 12px;
           color: rgb(254, 145, 103);
           border: 1px solid rgb(254, 145, 103);
         }
+
         .mv {
           position: absolute;
           left: 90%;
@@ -194,14 +216,17 @@ header {
           height: 100%;
           text-align: center;
           line-height: 50px;
+
           span {
             cursor: pointer;
             font-size: 26px;
           }
         }
       }
+
       .artist {
         height: 100%;
+
         span {
           text-align: center;
           display: inline-block;
@@ -209,21 +234,25 @@ header {
           cursor: pointer;
         }
       }
+
       .album {
         height: 100%;
       }
     }
   }
 }
+
 .bottom {
   display: flex;
   align-content: center;
   justify-content: center;
   margin-top: 40px;
+
   .active {
     background-color: rgb(236, 65, 65) !important;
     color: #fff;
   }
+
   .dot {
     width: 30px;
     height: 30px;

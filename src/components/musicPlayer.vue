@@ -2,19 +2,19 @@
   <div class="player">
     <div class="left">
       <div class="songPic" @mouseenter="changePicCover(true)" @mouseleave="changePicCover(false)" @click="toLyric">
-        <img :src="(info?info.al.picUrl:'https://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg')" alt="">
+        <img :src="(info ? info.al.picUrl : 'https://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg')" alt="">
         <div class="cover" v-show="picCover">
           <div class="el-icon-arrow-up" style="font-size:30px; color:#fff;"></div>
         </div>
       </div>
       <div class="songInfo">
         <div class="name">
-          {{info?info.name:'未播放'}}
-          <span v-if="info?(info.fee!=0?info.fee!=8:false):false">vip</span>
+          {{ info ? info.name : '未播放' }}
+          <span v-if="info ? (info.fee != 0 ? info.fee != 8 : false) : false">vip</span>
         </div>
         <div class="artist" v-if="info">
           <span v-for="artist in info.ar" :key="artist.index">
-            {{artist.name}}
+            {{ artist.name }}
           </span>
         </div>
       </div>
@@ -22,19 +22,20 @@
     <div class="middle">
       <div class="controller">
         <div class="el-icon-caret-left" @click="goBackPlay"></div>
-        <div class="el-icon-video-pause" v-if="isPlay" @click="play"></div>
+        <div class="el-icon-video-pause" v-if="isPlay" @click="musicPlay"></div>
         <div class="el-icon-video-play" v-else @click="pause"></div>
         <div class="el-icon-caret-right" @click="nextSong"></div>
       </div>
       <div class="slideBox">
-        <el-slider v-model="slideValue" :step='1' :min="0" :max="(info?Number((info.dt/1000).toFixed(2)):2)" :format-tooltip="formatTooltip" @change="changeSlide"></el-slider>
+        <el-slider v-model="slideValue" :step='1' :min="0" :max="(info ? Number((info.dt / 1000).toFixed(2)) : 2)"
+          :format-tooltip="formatTooltip" @change="changeSlide"></el-slider>
       </div>
     </div>
     <div class="right">
       <div class="choseQuality">
         <el-dropdown trigger="click" @command="commandHandler">
           <span class="el-dropdown-link" style='color:rgb(236, 65, 65);'>
-            {{quality=='standard'?'标准':(quality=='higher'?'较高':'极高')}}<i class="el-icon-arrow-down el-icon--right"></i>
+            {{ quality == 'standard' ? '标准' : (quality == 'higher' ? '较高' : '极高') }}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command='standard'>标准(默认)</el-dropdown-item>
@@ -119,7 +120,7 @@ export default {
       s = s < 10 ? '0' + s : s
       return m + ':' + s
     },
-    play() {
+    musicPlay() {
       if (!this.audio) return false
       this.isPlay = false
       this.audio.pause()
@@ -235,12 +236,14 @@ export default {
   width: 100%;
   height: 100%;
 }
+
 .left {
   display: flex;
   align-items: center;
   width: 20%;
   height: 100%;
   margin-left: 20px;
+
   .songPic {
     position: relative;
     width: 30%;
@@ -248,6 +251,7 @@ export default {
     border-radius: 4px;
     overflow: hidden;
     cursor: pointer;
+
     .cover {
       position: absolute;
       left: 0;
@@ -259,13 +263,16 @@ export default {
       justify-content: center;
       align-items: center;
     }
+
     img {
       width: 100%;
       height: 100%;
     }
   }
+
   .songInfo {
     flex: 1;
+
     .name {
       display: -webkit-box;
       -webkit-box-orient: vertical;
@@ -274,6 +281,7 @@ export default {
       text-overflow: ellipsis;
       font-size: 20px;
       cursor: pointer;
+
       span {
         padding: 0 2px;
         font-size: 12px;
@@ -281,6 +289,7 @@ export default {
         border: 1px solid rgb(254, 145, 103);
       }
     }
+
     .artist {
       display: -webkit-box;
       -webkit-box-orient: vertical;
@@ -291,6 +300,7 @@ export default {
     }
   }
 }
+
 .middle {
   display: flex;
   flex: 1;
@@ -298,38 +308,46 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
+
   .controller {
     /deep/div {
       cursor: pointer;
       font-size: 48px;
       color: rgb(49, 49, 49);
     }
+
     /deep/ .el-icon-video-play,
     .el-icon-video-pause {
       margin: 0 10px;
     }
   }
+
   .slideBox {
     width: 60%;
+
     /deep/ .el-slider__button-wrapper {
       top: -17px;
     }
+
     /deep/ .el-slider__button {
       width: 10px;
       height: 10px;
       border: 1px solid #ccc;
     }
+
     /deep/ .el-slider__runway {
       height: 3px;
     }
   }
 }
+
 .right {
   display: flex;
   align-items: center;
   margin-right: 20px;
   width: 20%;
   height: 100%;
+
   .choseQuality,
   .choseSpeed {
     cursor: pointer;
@@ -342,5 +360,4 @@ export default {
     color: rgb(236, 65, 65);
     border: 1px solid rgb(236, 65, 65);
   }
-}
-</style>
+}</style>
